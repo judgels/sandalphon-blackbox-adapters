@@ -1,4 +1,4 @@
-@(form: Form[org.iatoki.judgels.sandalphon.forms.grading.SubtaskBatchGradingForm], problem: org.iatoki.judgels.sandalphon.ProgrammingProblem, filenames: List[String])
+@(form: Form[org.iatoki.judgels.sandalphon.forms.grading.BatchGradingConfigForm], problem: org.iatoki.judgels.sandalphon.ProgrammingProblem, filenames: List[String])
 
 @import play.i18n.Messages
 @import org.iatoki.judgels.sandalphon.controllers.routes
@@ -6,7 +6,6 @@
 @implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
 
 <script type="text/javascript" src="@controllers.routes.Assets.at("lib/jquery/jquery.min.js")"></script>
-
 
 <script type="text/javascript">
 
@@ -22,7 +21,7 @@ $(document).ready(function() {
         var testSetSubtask = testSetSubtaskTemplate.clone().removeAttr('id');
         testSetSubtask.find('input')
                 .val(subtaskNo)
-                .attr('name', 'testSetsSubtasks[' + setNo + '][' + subtaskNo + ']')
+                .attr('name', 'testSetSubtasks[' + setNo + '][' + subtaskNo + ']')
                 .attr('checked', checked);
         testSetSubtask.find('span').html(subtaskNo + 1);
         $('#test-set-' + setNo).find('div').last().append(testSetSubtask);
@@ -33,11 +32,11 @@ $(document).ready(function() {
 
         // Update input values
         testCase.find('input').first()
-                .attr('name', 'testCasesIn[' + setNo + '][' + caseNo + ']')
+                .attr('name', 'testCaseInputs[' + setNo + '][' + caseNo + ']')
                 .val(inputVal);
 
         testCase.find('input').last()
-                .attr('name', 'testCasesOut[' + setNo + '][' + caseNo + ']')
+                .attr('name', 'testCaseOutputs[' + setNo + '][' + caseNo + ']')
                 .val(outputVal);
 
         // Append this test case
@@ -45,7 +44,7 @@ $(document).ready(function() {
 
         // Update add test case button
         $('#test-case-add-' + setNo).off('click').on('click', function() {
-            addTestCase(setNo, caseNo + 1);
+            addTestCase(setNo, caseNo + 1, $('#test-case-in-new-' + setNo).val(), $('#test-case-out-new-' + setNo).val());
             return false;
         });
     }
@@ -92,13 +91,13 @@ $(document).ready(function() {
         }
     });
 
-    @for(i <- 0 until form.get.testCasesIn.size) {
+    @for(i <- 0 until form.get.testCaseInputs.size) {
         addTestSet(@i);
-        @for(j <- 0 until form.get.testCasesIn.get(i).size) {
-            addTestCase(@i, @j, '@form.get.testCasesIn.get(i).get(j)', '@form.get.testCasesOut.get(i).get(j)');
+        @for(j <- 0 until form.get.testCaseInputs.get(i).size) {
+            addTestCase(@i, @j, '@form.get.testCaseInputs.get(i).get(j)', '@form.get.testCaseOutputs.get(i).get(j)');
         }
         @for(j <- 0 until 10) {
-            @if(form.get.testSetsSubtasks.get(i).get(j) != null) {
+            @if(form.get.testSetSubtasks.get(i).get(j) != null) {
                 addTestSetSubtask(@i, @j, true);
             } else {
                 addTestSetSubtask(@i, @j, false);
@@ -112,6 +111,7 @@ $(document).ready(function() {
 @b3.form(routes.ProgrammingProblemController.postUpdateGrading(problem.getId)) {
     @helper.CSRF.formField
 
+
     @b3.inputWrapped("timeLimit", form("timeLimit"), '_label -> "Time Limit") { input =>
         <div class="input-group">
             @input
@@ -121,7 +121,7 @@ $(document).ready(function() {
     @b3.inputWrapped("memoryLimit", form("memoryLimit"), '_label -> "Memory Limit") { input =>
         <div class="input-group">
             @input
-            <div class="input-group-addon">megabytes</div>
+            <div class="input-group-addon">kilobytes</div>
         </div>
     }
 
@@ -140,7 +140,7 @@ $(document).ready(function() {
 
     <div class="row">
         <div class="col-md-3">
-            <label class="control-label">Subtask Points</label>
+            <label class="control-label">Subtasks</label>
         </div>
 
         <div class="col-md-9">
@@ -151,33 +151,23 @@ $(document).ready(function() {
                             <tr>
                                 <th>No</th>
                                 <th>Points</th>
+                                <th>Param</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>
-                                    1
-                                </td>
-                                <td>
-                                    <input class="form-control input-sm" type="text" name="subtaskPoints[0]"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    1
-                                </td>
-                                <td>
-                                    <input class="form-control input-sm" type="text" name="subtaskPoints[0]"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    1
-                                </td>
-                                <td>
-                                    <input class="form-control input-sm" type="text" name="subtaskPoints[0]"/>
-                                </td>
-                            </tr>
+                            @for(i <- 0 until 10) {
+                                <tr>
+                                    <td>
+                                    @{i+1}
+                                    </td>
+                                    <td>
+                                        @b3.text(form("subtaskPoints[" + i + "]"), '_label -> None)(b3.clear.fieldConstructor, implicitly[Lang])
+                                    </td>
+                                    <td>
+                                        @b3.text(form("subtaskParams[" + i + "]"), '_label -> None)(b3.clear.fieldConstructor, implicitly[Lang])
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
 
