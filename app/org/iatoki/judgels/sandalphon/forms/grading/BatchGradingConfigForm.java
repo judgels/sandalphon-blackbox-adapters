@@ -1,7 +1,5 @@
 package org.iatoki.judgels.sandalphon.forms.grading;
 
-import play.data.validation.Constraints;
-
 import java.util.List;
 
 public final class BatchGradingConfigForm {
@@ -15,7 +13,9 @@ public final class BatchGradingConfigForm {
 
     public List<List<Integer>> testSetSubtasks;
 
-    public List<Double> subtaskPoints;
+    public List<Integer> subtaskPoints;
 
     public List<String> subtaskParams;
+
+    public String scoringExecutorFilename;
 }
