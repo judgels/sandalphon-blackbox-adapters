@@ -11,7 +11,7 @@ public final class BatchGradingConfigForm {
 
     public List<List<String>> testCaseOutputs;
 
-    public List<List<Integer>> testSetSubtasks;
+    public List<List<Integer>> testGroupSubtasks;
 
     public List<Integer> subtaskPoints;
 

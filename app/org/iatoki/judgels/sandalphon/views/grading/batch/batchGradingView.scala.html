@@ -11,96 +11,165 @@
 
 $(document).ready(function() {
 
-    var testSetTemplate = $('#test-set-template');
+    var testGroupTemplate = $('#test-group-template');
     var testCaseTemplate = $('#test-case-template');
-    var testSetSubtaskTemplate = $('#test-set-subtask-template');
+    var testGroupSubtaskTemplate = $('#test-group-subtask-template');
 
-    var testSetAddButton = $('#test-set-add');
+    var testGroups = [];
+    var newTestGroupAddButton = $('#test-group-add');
 
-    function addTestSetSubtask(setNo, subtaskNo, checked) {
-        var testSetSubtask = testSetSubtaskTemplate.clone().removeAttr('id');
-        testSetSubtask.find('input')
-                .val(subtaskNo)
-                .attr('name', 'testSetSubtasks[' + setNo + '][' + subtaskNo + ']')
-                .attr('checked', checked);
-        testSetSubtask.find('span').html(subtaskNo + 1);
-        $('#test-set-' + setNo).find('div').last().append(testSetSubtask);
-    }
+    function addNewTestCase(groupNo, inputVal, outputVal) {
+        var testGroup = testGroups[groupNo];
 
-    function addTestCase(setNo, caseNo, inputVal, outputVal) {
-        var testCase = testCaseTemplate.clone().removeAttr('id');
+        var container = testCaseTemplate.clone().removeAttr('id');
+        var inInput = container.find('input').first();
+        var outInput = container.find('input').last();
+        var removeButton = container.find('a').last();
+
+        var caseNo = testGroup.testCases.length;
 
         // Update input values
-        testCase.find('input').first()
-                .attr('name', 'testCaseInputs[' + setNo + '][' + caseNo + ']')
+        inInput
+                .attr('name', 'testCaseInputs[' + groupNo + '][' + caseNo + ']')
                 .val(inputVal);
 
-        testCase.find('input').last()
-                .attr('name', 'testCaseOutputs[' + setNo + '][' + caseNo + ']')
+        outInput
+                .attr('name', 'testCaseOutputs[' + groupNo + '][' + caseNo + ']')
                 .val(outputVal);
 
-        // Append this test case
-        $('#test-set-' + setNo).find('tr').last().before(testCase);
-
-        // Update add test case button
-        $('#test-case-add-' + setNo).off('click').on('click', function() {
-            addTestCase(setNo, caseNo + 1, $('#test-case-in-new-' + setNo).val(), $('#test-case-out-new-' + setNo).val());
+        // Update remove test case button
+        removeButton.on('click', function() {
+            removeTestCase(groupNo, caseNo);
             return false;
         });
+
+        var testCase = {
+            container: container,
+            inInput: inInput,
+            outInput: outInput,
+            removeButton: removeButton
+        };
+
+        testGroup.testCases.push(testCase);
+
+        // Append this test case
+        testCase.container.insertBefore(testGroup.container.find('tr').last());
     }
 
-    function addTestSet(setNo) {
-        var testSet = testSetTemplate.clone().attr('id', 'test-set-' + setNo);
+    function removeTestCase(groupNo, caseNo) {
+        var testGroup = testGroups[groupNo];
+        testGroup.testCases[caseNo].container.remove();
+        testGroup.testCases.splice(caseNo, 1);
+        refreshTestGroup(testGroup, groupNo);
+    }
+
+    function addNewTestGroup() {
+        var groupNo = testGroups.length;
+
+        var container = testGroupTemplate.clone().removeAttr('id');
+        var newTestCaseInSelect = container.find('select').first();
+        var newTestCaseOutSelect = container.find('select').last();
+        var newTestCaseAddButton = container.find('a').last();
+        var removeButton = container.find('a').first();
 
         // Remove test case template
-        testSet.find('tbody tr').first().remove();
+        container.find('tbody tr').first().remove();
 
-        // Change panel heading
-        testSet.find('span').first().html('Test Set ' + (setNo+1));
+        // Remove test group subtask numbers template
+        container.find('div').last().empty();
 
-        // Update test case inputs
-        testSet.find('select').first().attr('id', 'test-case-in-new-' + setNo);
-        testSet.find('select').last().attr('id', 'test-case-out-new-' + setNo);
+        // Add subtasks
+        var subtaskCheckboxes = [];
+        for (var subtaskNo = 0; subtaskNo < 10; subtaskNo++) {
+            var subtaskCheckbox = testGroupSubtaskTemplate.clone().removeAttr('id');
+            subtaskCheckbox.find('input')
+                .val(subtaskNo)
+                .attr('name', 'testGroupSubtasks[' + groupNo + '][' + subtaskNo + ']')
+                .attr('checked', false);
+            subtaskCheckbox.find('span').html(subtaskNo + 1);
+            container.find('div').last().append(subtaskCheckbox);
+            subtaskCheckboxes.push(subtaskCheckbox);
+        }
+
+        var testGroup = {
+            container: container,
+            newTestCase: {
+                inSelect: newTestCaseInSelect,
+                outSelect: newTestCaseOutSelect,
+                addButton: newTestCaseAddButton
+            },
+            testCases: [],
+            subtaskCheckboxes: subtaskCheckboxes,
+            removeButton: removeButton
+        };
+
+        testGroups.push(testGroup);
+
+        // Reset all numbering in this test group
+        refreshTestGroup(testGroup, groupNo);
+
+        // Insert this test group before the add button
+        container.insertBefore(newTestGroupAddButton);
+        container.show();
+    }
+
+    function refreshTestGroup(testGroup, groupNo) {
+        // Update test group title
+        testGroup.container.find('span').first().html('Test Group ' + (groupNo + 1));
+
+        // Update test case input names
+        var testCasesCount = testGroup.testCases.length;
+        for (var caseNo = 0; caseNo < testCasesCount; caseNo++) {
+            var testCase = testGroup.testCases[caseNo];
+            testCase.inInput.attr('name', 'testCaseIns[' + groupNo + '][' + caseNo + ']');
+            testCase.outInput.attr('name', 'testCaseOuts[' + groupNo + '][' + caseNo + ']');
+
+            (function(caseNo) {
+                testCase.removeButton.off('click').on('click', function() {
+                    removeTestCase(groupNo, caseNo) ;
+                    return false ;
+                });
+            })(caseNo);
+        }
 
         // Update add test case button
-        testSet.find('a').last().attr('id', 'test-case-add-' + setNo).on('click', function() {
-            addTestCase(setNo, 0, $('#test-case-in-new-' + setNo).val(), $('#test-case-out-new-' + setNo).val());
+        testGroup.newTestCase.addButton.off('click').on('click', function() {
+            addNewTestCase(groupNo, testGroup.newTestCase.inSelect.val(), testGroup.newTestCase.outSelect.val());
             return false;
         });
 
-        // Update add test set button
-        testSetAddButton.off('click').on('click', function() {
-            addTestSet(setNo + 1);
-            for (var i = 0; i < 10; i++) {
-                addTestSetSubtask(setNo + 1, i, false);
-            }
+        testGroup.removeButton.off('click').on('click', function() {
+            removeTestGroup(groupNo);
+            return false;
         });
-
-
-        // Remove test set subtaskNumbers template
-        testSet.find('div').last().empty();
-
-        testSetAddButton.before(testSet);
-        testSet.show();
     }
 
-    testSetAddButton.on('click', function() {
-        addTestSet(0);
-        for (var i = 0; i < 10; i++) {
-            addTestSetSubtask(0, i, false);
+    function removeTestGroup(groupNo) {
+        var testGroup = testGroups[groupNo];
+        testGroup.container.remove();
+        testGroups.splice(groupNo, 1);
+
+        for (var i = groupNo; i < testGroups.length; i++) {
+            refreshTestGroup(testGroups[i], i);
         }
+    }
+
+    function checkTestGroupSubtask(groupNo, subtaskNo) {
+        testGroups[groupNo].subtaskCheckboxes[subtaskNo].attr('checked', true);
+    }
+
+    newTestGroupAddButton.on('click', function() {
+        addNewTestGroup();
     });
 
     @for(i <- 0 until form.get.testCaseInputs.size) {
-        addTestSet(@i);
+        addNewTestGroup();
         @for(j <- 0 until form.get.testCaseInputs.get(i).size) {
-            addTestCase(@i, @j, '@form.get.testCaseInputs.get(i).get(j)', '@form.get.testCaseOutputs.get(i).get(j)');
+            addNewTestCase(@i, '@form.get.testCaseInputs.get(i).get(j)', '@form.get.testCaseOutputs.get(i).get(j)');
         }
         @for(j <- 0 until 10) {
-            @if(form.get.testSetSubtasks.get(i).get(j) != null) {
-                addTestSetSubtask(@i, @j, true);
-            } else {
-                addTestSetSubtask(@i, @j, false);
+            @if(form.get.testGroupSubtasks.get(i).get(j) != null) {
+                checkTestGroupSubtask(@i, @j);
             }
         }
     }
@@ -133,7 +202,7 @@ $(document).ready(function() {
 
         <div class="col-md-9">
 
-            <button id="test-set-add" class="btn btn-primary btn-xs" type="button">Add Test Set</button>
+            <button id="test-group-add" class="btn btn-primary btn-xs" type="button">Add Test Group</button>
         </div>
     </div>
 
@@ -151,7 +220,6 @@ $(document).ready(function() {
                             <tr>
                                 <th>No</th>
                                 <th>Points</th>
-                                <th>Param</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -162,9 +230,6 @@ $(document).ready(function() {
                                     </td>
                                     <td>
                                         @b3.text(form("subtaskPoints[" + i + "]"), '_label -> None)(b3.clear.fieldConstructor, implicitly[Lang])
-                                    </td>
-                                    <td>
-                                        @b3.text(form("subtaskParams[" + i + "]"), '_label -> None)(b3.clear.fieldConstructor, implicitly[Lang])
                                     </td>
                                 </tr>
                             }
@@ -183,9 +248,9 @@ $(document).ready(function() {
 }
 
 
-<div id="test-set-template" class="panel panel-default" style="display: none">
+<div id="test-group-template" class="panel panel-default" style="display: none">
     <div class="panel-heading">
-        <span>Test Set 0</span> <a href="#"><span class="glyphicon glyphicon-remove"></span></a>
+        <span>Test Group 0</span> <a href="#"><span class="glyphicon glyphicon-remove"></span></a>
     </div>
     <div class="panel-body">
         <table class="table table-condensed">
@@ -210,6 +275,7 @@ $(document).ready(function() {
                 </tr>
 
                 <tr class="active">
+
                     <td>
                         <select>
                             @for(filename <- filenames) {
@@ -236,7 +302,7 @@ $(document).ready(function() {
 
         <p>Assign to subtasks:</p>
         <div>
-            <label id="test-set-subtask-template" class="checkbox-inline">
+            <label id="test-group-subtask-template" class="checkbox-inline">
                 <input type="checkbox"> <span>0</span>
             </label>
         </div>
