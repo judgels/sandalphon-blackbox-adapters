@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
+import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.SampleTestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
@@ -97,7 +98,7 @@ public final class BatchWithSubtasksGradingConfigAdapter implements GradingConfi
     }
 
     @Override
-    public BlackBoxGradingConfig createConfigFromForm(Form<?> form) {
+    public GradingConfig createConfigFromForm(Form<?> form) {
         BatchWithSubtasksGradingConfig config = new BatchWithSubtasksGradingConfig();
 
         @SuppressWarnings("unchecked")

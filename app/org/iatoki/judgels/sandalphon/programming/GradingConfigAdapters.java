@@ -1,6 +1,5 @@
 package org.iatoki.judgels.sandalphon.programming;
 
-import org.iatoki.judgels.gabriel.GradingType;
 import org.iatoki.judgels.sandalphon.programming.adapters.BatchWithSubtasksGradingConfigAdapter;
 
 public final class GradingConfigAdapters {
