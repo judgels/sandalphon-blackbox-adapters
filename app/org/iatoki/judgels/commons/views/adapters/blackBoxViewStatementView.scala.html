@@ -1,0 +1,24 @@
+@(targetCall: play.api.mvc.Call, statement: String, config: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig)
+
+@import play.i18n.Messages
+
+@statement
+
+<hr />
+<h4>Submit solution</h4>
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-2", "col-md-10") }
+
+@b3.form(targetCall, 'enctype->"multipart/form-data") {
+    @helper.CSRF.formField
+
+    @for(key <- config.getRequiredSourceFileKeys) {
+        <div class="form-group">
+            <label for="@key" class="col-md-2">@key</label>
+            <div class="col-md-10">
+                <input type="file" name="@key">
+            </div>
+        </div>
+    }
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("Submit") }
+}
