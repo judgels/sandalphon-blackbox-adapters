@@ -37,10 +37,12 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
 
             try {
                 byte[] content = FileUtils.readFileToByteArray(sourceFile);
-                SourceFile
+
             } catch (IOException e) {
 
             }
         }
+
+        return null;
     }
 }
