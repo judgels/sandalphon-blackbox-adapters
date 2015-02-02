@@ -3,17 +3,15 @@ package org.iatoki.judgels.sandalphon.programming.adapters;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import com.google.gson.Gson;
 import org.iatoki.judgels.gabriel.GradingConfig;
-import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.SampleTestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.graders.BatchWithSubtasksGradingConfig;
-import org.iatoki.judgels.sandalphon.forms.grading.BatchWithSubtasksGradingConfigForm;
+import org.iatoki.judgels.sandalphon.forms.configs.BatchWithSubtasksGradingConfigForm;
 import org.iatoki.judgels.sandalphon.programming.GradingConfigAdapter;
 import org.iatoki.judgels.sandalphon.programming.Problem;
-import org.iatoki.judgels.sandalphon.views.html.programming.grading.batchWithSubtasksGradingConfigView;
+import org.iatoki.judgels.sandalphon.views.html.programming.configs.batchWithSubtasksGradingConfigView;
 import play.data.Form;
 import play.mvc.Http;
 import play.twirl.api.Html;
@@ -25,24 +23,24 @@ import java.util.stream.Collectors;
 
 public final class BatchWithSubtasksGradingConfigAdapter implements GradingConfigAdapter {
     @Override
-    public Form<?> createFormFromConfigJson(String gradingConfigJson) {
-        BatchWithSubtasksGradingConfig config = new Gson().fromJson(gradingConfigJson, BatchWithSubtasksGradingConfig.class);
+    public Form<?> createFormFromConfig(GradingConfig config) {
+        BatchWithSubtasksGradingConfig batchConfig = (BatchWithSubtasksGradingConfig) config;
         BatchWithSubtasksGradingConfigForm form = new BatchWithSubtasksGradingConfigForm();
 
-        form.timeLimit = config.getTimeLimitInMilliseconds();
-        form.memoryLimit = config.getMemoryLimitInKilobytes();
+        form.timeLimit = batchConfig.getTimeLimitInMilliseconds();
+        form.memoryLimit = batchConfig.getMemoryLimitInKilobytes();
 
-        form.sampleTestCaseInputs = Lists.transform(config.getSampleTestData(), tc -> tc.getInput());
-        form.sampleTestCaseOutputs = Lists.transform(config.getSampleTestData(), tc -> tc.getOutput());
+        form.sampleTestCaseInputs = Lists.transform(batchConfig.getSampleTestData(), tc -> tc.getInput());
+        form.sampleTestCaseOutputs = Lists.transform(batchConfig.getSampleTestData(), tc -> tc.getOutput());
 
         ImmutableList.Builder<List<Integer>> sampleTestCaseSubtaskNumbers = ImmutableList.builder();
 
-        for (SampleTestCase testCase : config.getSampleTestData()) {
+        for (SampleTestCase testCase : batchConfig.getSampleTestData()) {
             List<Integer> subtasks = Lists.newArrayList();
 
             Set<Integer> subtaskNumbers = testCase.getSubtaskNumbers();
 
-            for (int i = 0; i < config.getSubtasks().size(); i++) {
+            for (int i = 0; i < batchConfig.getSubtasks().size(); i++) {
                 if (subtaskNumbers.contains(i)) {
                     subtasks.add(i);
                 } else {
@@ -58,7 +56,7 @@ public final class BatchWithSubtasksGradingConfigAdapter implements GradingConfi
         ImmutableList.Builder<List<String>> testCaseOutputs = ImmutableList.builder();
         ImmutableList.Builder<List<Integer>> testGroupSubtasks = ImmutableList.builder();
 
-        for (TestGroup testGroup : config.getTestData()) {
+        for (TestGroup testGroup : batchConfig.getTestData()) {
             testCasesInputs.add(Lists.transform(testGroup.getTestCases(), tc -> tc.getInput()));
             testCaseOutputs.add(Lists.transform(testGroup.getTestCases(), tc -> tc.getOutput()));
 
@@ -67,7 +65,7 @@ public final class BatchWithSubtasksGradingConfigAdapter implements GradingConfi
 
             Set<Integer> subtaskNumbers = testGroup.getSubtaskNumbers();
 
-            for (int i = 0; i < config.getSubtasks().size(); i++) {
+            for (int i = 0; i < batchConfig.getSubtasks().size(); i++) {
                 if (subtaskNumbers.contains(i)) {
                     subtasks.add(i);
                 } else {
@@ -81,9 +79,9 @@ public final class BatchWithSubtasksGradingConfigAdapter implements GradingConfi
         form.testCaseOutputs = testCaseOutputs.build();
         form.testGroupSubtaskNumbers = testGroupSubtasks.build();
 
-        form.subtaskPoints = Lists.transform(config.getSubtasks(), s -> s.getPoints());
+        form.subtaskPoints = Lists.transform(batchConfig.getSubtasks(), s -> s.getPoints());
 
-        form.customScorer = config.getCustomScorer();
+        form.customScorer = batchConfig.getCustomScorer();
 
         if (form.customScorer == null) {
             form.customScorer = "(None)";
@@ -190,7 +188,7 @@ public final class BatchWithSubtasksGradingConfigAdapter implements GradingConfi
     }
 
     @Override
-    public Html renderForm(Form<?> form, Problem problem, List<File> testDataFiles, List<File> helperFiles) {
+    public Html renderUpdateGradingConfig(Form<?> form, Problem problem, List<File> testDataFiles, List<File> helperFiles) {
         @SuppressWarnings("unchecked")
         Form<BatchWithSubtasksGradingConfigForm> batchForm = (Form<BatchWithSubtasksGradingConfigForm>) form;
 
