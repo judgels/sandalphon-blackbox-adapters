@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.SampleTestCase;
+import org.iatoki.judgels.gabriel.blackbox.Subtask;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.graders.BatchWithSubtasksGradingConfig;
@@ -33,6 +34,8 @@ public final class BatchWithSubtasksGradingConfigAdapter implements GradingConfi
         form.sampleTestCaseInputs = Lists.transform(batchConfig.getSampleTestData(), tc -> tc.getInput());
         form.sampleTestCaseOutputs = Lists.transform(batchConfig.getSampleTestData(), tc -> tc.getOutput());
 
+        int subtasksCount = Math.max(10, batchConfig.getSubtasks().size());
+
         ImmutableList.Builder<List<Integer>> sampleTestCaseSubtaskNumbers = ImmutableList.builder();
 
         for (SampleTestCase testCase : batchConfig.getSampleTestData()) {
@@ -40,7 +43,7 @@ public final class BatchWithSubtasksGradingConfigAdapter implements GradingConfi
 
             Set<Integer> subtaskNumbers = testCase.getSubtaskNumbers();
 
-            for (int i = 0; i < batchConfig.getSubtasks().size(); i++) {
+            for (int i = 0; i < subtasksCount; i++) {
                 if (subtaskNumbers.contains(i)) {
                     subtasks.add(i);
                 } else {
@@ -65,7 +68,7 @@ public final class BatchWithSubtasksGradingConfigAdapter implements GradingConfi
 
             Set<Integer> subtaskNumbers = testGroup.getSubtaskNumbers();
 
-            for (int i = 0; i < batchConfig.getSubtasks().size(); i++) {
+            for (int i = 0; i < subtasksCount; i++) {
                 if (subtaskNumbers.contains(i)) {
                     subtasks.add(i);
                 } else {
@@ -79,7 +82,14 @@ public final class BatchWithSubtasksGradingConfigAdapter implements GradingConfi
         form.testCaseOutputs = testCaseOutputs.build();
         form.testGroupSubtaskNumbers = testGroupSubtasks.build();
 
-        form.subtaskPoints = Lists.transform(batchConfig.getSubtasks(), s -> s.getPoints());
+        List<Integer> subtaskPoints = Lists.newArrayList();
+        for (Subtask subtask : batchConfig.getSubtasks()) {
+            subtaskPoints.add(subtask.getPoints());
+        }
+        for (int i = batchConfig.getSubtasks().size(); i < subtasksCount; i++) {
+            subtaskPoints.add(null);
+        }
+        form.subtaskPoints = subtaskPoints;
 
         form.customScorer = batchConfig.getCustomScorer();
 
@@ -107,6 +117,8 @@ public final class BatchWithSubtasksGradingConfigAdapter implements GradingConfi
 
         ImmutableList.Builder<SampleTestCase> sampleTestData = ImmutableList.builder();
 
+        int totalSubtasksCount = 0;
+
         int sampleTestCasesCount = 0;
         if (data.sampleTestCaseInputs != null) {
             sampleTestCasesCount = data.sampleTestCaseInputs.size();
@@ -125,6 +137,8 @@ public final class BatchWithSubtasksGradingConfigAdapter implements GradingConfi
                     .filter(s -> s != null)
                     .collect(Collectors.toSet());
 
+            totalSubtasksCount = Math.max(totalSubtasksCount, sampleTestCaseSubtasks.stream().max(Integer::max).get());
+
             sampleTestData.add(new SampleTestCase(data.sampleTestCaseInputs.get(i), data.sampleTestCaseOutputs.get(i), sampleTestCaseSubtasks));
         }
 
@@ -137,11 +151,10 @@ public final class BatchWithSubtasksGradingConfigAdapter implements GradingConfi
             testGroupsCount = data.testCaseInputs.size();
         }
 
-        int subtasksCount;
-        if (data.testGroupSubtaskNumbers == null) {
-            subtasksCount = 10;
-        } else {
-            subtasksCount = Math.max(data.testGroupSubtaskNumbers.size(), 10);
+        for (int i = 0; i < testGroupsCount; i++) {
+            if (data.testGroupSubtaskNumbers != null && data.testGroupSubtaskNumbers.get(i) != null) {
+                totalSubtasksCount = Math.max(totalSubtasksCount, data.testGroupSubtaskNumbers.get(i).size());
+            }
         }
 
         for (int i = 0; i < testGroupsCount; i++) {
@@ -157,8 +170,12 @@ public final class BatchWithSubtasksGradingConfigAdapter implements GradingConfi
             }
 
             ImmutableSet.Builder<Integer> subtaskNumbers = ImmutableSet.builder();
+            int subtasksCount = 0;
+            if (data.testGroupSubtaskNumbers != null && data.testGroupSubtaskNumbers.get(i) != null) {
+                subtasksCount = data.testGroupSubtaskNumbers.get(i).size();
+            }
             for (int j = 0; j < subtasksCount; j++) {
-                if (data.testGroupSubtaskNumbers != null && j < data.testGroupSubtaskNumbers.get(i).size() && data.testGroupSubtaskNumbers.get(i).get(j) != null) {
+                if (data.testGroupSubtaskNumbers.get(i).get(j) != null) {
                     subtaskNumbers.add(j);
                 }
             }
@@ -168,8 +185,12 @@ public final class BatchWithSubtasksGradingConfigAdapter implements GradingConfi
 
         config.testData = testData.build();
 
+        if (data.subtaskPoints != null) {
+            totalSubtasksCount = Math.max(totalSubtasksCount, data.subtaskPoints.size());
+        }
+
         ImmutableList.Builder<Integer> subtaskPoints = ImmutableList.builder();
-        for (int i = 0; i < subtasksCount; i++) {
+        for (int i = 0; i < totalSubtasksCount; i++) {
             if (data.subtaskPoints != null && i < data.subtaskPoints.size()) {
                 subtaskPoints.add(data.subtaskPoints.get(i));
             } else {
