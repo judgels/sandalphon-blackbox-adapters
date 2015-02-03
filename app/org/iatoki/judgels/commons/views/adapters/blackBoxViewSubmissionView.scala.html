@@ -1,0 +1,115 @@
+@(submissionId: Long, verdict: org.iatoki.judgels.gabriel.Verdict, score: Int, details: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails, config: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig)
+
+@import com.google.common.base.Joiner
+
+<h3>Submission #@submissionId</h3>
+
+<h4>Sample Test Data Results</h4>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Verdict</th>
+                    <th>Score</th>
+                    <th>Time</th>
+                    <th>Memory</th>
+                    @if(config.getSubtasks.get(0).getId != -1) {
+                        <th>For subtasks</th>
+                    }
+                </tr>
+            </thead>
+
+            <tbody>
+                @for(i <- 0 until details.getTestDataResults.get(0).size) {
+                    @defining(details.getTestDataResults.get(0).get(i)) { testCaseResult =>
+                        <tr>
+                            <td>@{i+1}</td>
+                            <td>@testCaseResult.getVerdict.getName</td>
+                            <td>@testCaseResult.getScore</td>
+                            <td>@testCaseResult.getDetails.getTimeInMilliseconds ms</td>
+                            <td>@testCaseResult.getDetails.getMemoryInKilobytes KB</td>
+                            @if(config.getSubtasks.get(0).getId != -1) {
+                                <td>@Joiner.on(", ").join(config.getTestData.get(0).getTestCases.get(i).getSubtaskIds)</td>
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<h4>Test Data Results</h4>
+
+@for(i <- 1 until details.getTestDataResults.size()) {
+    <div class="panel panel-default">
+        @if(config.getTestData.get(i).getId != -1) {
+            <div class="panel-heading">Test Group @i</div>
+        }
+        <div class="panel-body">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Verdict</th>
+                        <th>Score</th>
+                        <th>Time</th>
+                        <th>Memory</th>
+                        @if(config.getSubtasks.get(0).getId != -1) {
+                            <th>For subtasks</th>
+                        }
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @for(j <- 0 until details.getTestDataResults.get(i).size) {
+                        @defining(details.getTestDataResults.get(i).get(j)) { testCaseResult =>
+                            <tr>
+                                <td>@{j + 1}</td>
+                                <td>@testCaseResult.getVerdict.getName</td>
+                                <td>@testCaseResult.getScore</td>
+                                <td>@testCaseResult.getDetails.getTimeInMilliseconds ms</td>
+                                <td>@testCaseResult.getDetails.getMemoryInKilobytes KB</td>
+                                @if(config.getSubtasks.get(0).getId != -1) {
+                                    <td>@Joiner.on(", ").join(config.getTestData.get(i).getTestCases.get(i).getSubtaskIds)</td>
+                                }
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@if(config.getSubtasks.get(0).getId != -1) {
+    <h4>Subtask Results</h4>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Verdict</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @for(i <- 0 until details.getSubtaskResults.size) {
+                        @defining(details.getSubtaskResults.get(i)) { subtaskResult =>
+                            <tr>
+                                <td>@{i + 1}</td>
+                                <td>@subtaskResult.getVerdict.getName</td>
+                                <td>@subtaskResult.getScore</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
