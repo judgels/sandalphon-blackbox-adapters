@@ -7,12 +7,12 @@ public final class SubmissionAdapters {
         // prevent instantiation
     }
 
-    public static SubmissionAdapter fromGradingType(String type) {
-        switch (type) {
+    public static SubmissionAdapter fromGradingEngine(String engine) {
+        switch (engine) {
             case "BatchWithSubtasks":
                 return new BlackBoxSubmissionAdapter();
             default:
-                throw new IllegalArgumentException("Grading type " + type + " unknown");
+                throw new IllegalArgumentException("Grading engine " + engine + " unknown");
         }
     }
 }

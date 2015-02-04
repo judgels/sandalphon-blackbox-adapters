@@ -1,54 +1,67 @@
-@(submissionId: Long, verdict: org.iatoki.judgels.gabriel.Verdict, score: Int, details: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails, config: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig)
+@(submission: org.iatoki.judgels.commons.Submission, details: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails, sourceFiles: Map[String, org.iatoki.judgels.gabriel.blackbox.SourceFile])
 
 @import com.google.common.base.Joiner
 
-<h3>Submission #@submissionId</h3>
+<h3>Submission #@submission.getId</h3>
 
-<h4>Sample Test Data Results</h4>
-
+<h4>General Info</h4>
 <div class="panel panel-default">
     <div class="panel-body">
         <table class="table table-condensed">
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Verdict</th>
-                    <th>Score</th>
-                    <th>Time</th>
-                    <th>Memory</th>
-                    @if(config.getSubtasks.get(0).getId != -1) {
-                        <th>For subtasks</th>
-                    }
+                    <th>Info</th>
+                    <th>Value</th>
                 </tr>
             </thead>
-
             <tbody>
-                @for(i <- 0 until details.getTestDataResults.get(0).size) {
-                    @defining(details.getTestDataResults.get(0).get(i)) { testCaseResult =>
-                        <tr>
-                            <td>@{i+1}</td>
-                            <td>@testCaseResult.getVerdict.getName</td>
-                            <td>@testCaseResult.getScore</td>
-                            <td>@testCaseResult.getDetails.getTimeInMilliseconds ms</td>
-                            <td>@testCaseResult.getDetails.getMemoryInKilobytes KB</td>
-                            @if(config.getSubtasks.get(0).getId != -1) {
-                                <td>@Joiner.on(", ").join(config.getTestData.get(0).getTestCases.get(i).getSubtaskIds)</td>
-                            }
-                        </tr>
-                    }
-                }
+                <tr>
+                    <td>Jid</td><td>@submission.getJid</td>
+                </tr>
+                <tr>
+                    <td>Author</td><td>@submission.getAuthorJid</td>
+                </tr>
+                <tr>
+                    <td>Language</td><td>@submission.getGradingLanguage</td>
+                </tr>
+                <tr>
+                    <td>Time</td><td>@submission.getTimestamp</td>
+                </tr>
+                <tr>
+                    <td>Verdict</td><td>@submission.getVerdict.getCode (@submission.getVerdict.getName)</td>
+                </tr>
+                <tr>
+                    <td>Score</td><td>@submission.getScore</td>
+                </tr>
             </tbody>
         </table>
     </div>
 </div>
 
-<h4>Test Data Results</h4>
-
-@for(i <- 1 until details.getTestDataResults.size()) {
+<h4>Source Files</h4>
+@for((key, sourceFile) <- sourceFiles) {
     <div class="panel panel-default">
-        @if(config.getTestData.get(i).getId != -1) {
-            <div class="panel-heading">Test Group @i</div>
-        }
+        <div class="panel-heading">@key - @sourceFile.getName</div>
+        <div class="panel-body">
+            <pre>@sourceFile.getContent</pre>
+            <p>Compilation Output:</p>
+            @if(details != null) {
+                <pre>@details.getCompilationOutput.get(key)</pre>
+            }else{
+                <p>(Not compiled yet)</p>
+            }
+        </div>
+    </div>
+}
+
+
+<h4>Sample Test Data Results</h4>
+
+@if(details == null) {
+    <p>(Not run yet)</p>
+}else{
+@if(details.getTestDataResults.size >= 1) {
+    <div class="panel panel-default">
         <div class="panel-body">
             <table class="table table-condensed">
                 <thead>
@@ -58,34 +71,90 @@
                         <th>Score</th>
                         <th>Time</th>
                         <th>Memory</th>
-                        @if(config.getSubtasks.get(0).getId != -1) {
-                            <th>For subtasks</th>
+                        @if(details.getSubtaskResults.get(0).getId != -1) {
+                            <th>Subtasks</th>
                         }
                     </tr>
                 </thead>
 
                 <tbody>
-                    @for(j <- 0 until details.getTestDataResults.get(i).size) {
-                        @defining(details.getTestDataResults.get(i).get(j)) { testCaseResult =>
-                            <tr>
-                                <td>@{j + 1}</td>
-                                <td>@testCaseResult.getVerdict.getName</td>
-                                <td>@testCaseResult.getScore</td>
-                                <td>@testCaseResult.getDetails.getTimeInMilliseconds ms</td>
-                                <td>@testCaseResult.getDetails.getMemoryInKilobytes KB</td>
-                                @if(config.getSubtasks.get(0).getId != -1) {
-                                    <td>@Joiner.on(", ").join(config.getTestData.get(i).getTestCases.get(i).getSubtaskIds)</td>
-                                }
-                            </tr>
-                        }
+                @for(i <- 0 until details.getTestDataResults.get(0).getTestCaseResults.size) {
+                    @defining(details.getTestDataResults.get(0).getTestCaseResults.get(i)) { testCaseResult =>
+                        <tr>
+                            <td>@{
+                                i + 1
+                            }</td>
+                            <td>@testCaseResult.getVerdict.getName</td>
+                            <td>@testCaseResult.getScore</td>
+                            <td>@testCaseResult.getDetails.getTimeInMilliseconds ms</td>
+                            <td>@testCaseResult.getDetails.getMemoryInKilobytes KB</td>
+                            @if(details.getSubtaskResults.get(0).getId != -1) {
+                                <td>@Joiner.on(", ").join(testCaseResult.getSubtaskIds)</td>
+                            }
+                        </tr>
                     }
+                }
                 </tbody>
             </table>
         </div>
     </div>
-}
+}else{
+    <p>(No sample test cases)</p>
+}}
 
-@if(config.getSubtasks.get(0).getId != -1) {
+<h4>Test Data Results</h4>
+
+@if(details == null) {
+    <p>(Not run yet)</p>
+}else{
+@if(details.getTestDataResults.size >= 2) {
+    @for(i <- 1 until details.getTestDataResults.size()) {
+        <div class="panel panel-default">
+            @if(details.getTestDataResults.get(i).getId != -1) {
+                <div class="panel-heading">Test Group @i</div>
+            }
+        <div class="panel-body">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Verdict</th>
+                        <th>Score</th>
+                        <th>Time</th>
+                        <th>Memory</th>
+                        @if(details.getSubtaskResults.get(0).getId != -1) {
+                            <th>Subtasks</th>
+                        }
+                    </tr>
+                </thead>
+
+                <tbody>
+                @for(j <- 0 until details.getTestDataResults.get(i).getTestCaseResults.size) {
+                    @defining(details.getTestDataResults.get(i).getTestCaseResults.get(j)) { testCaseResult =>
+                        <tr>
+                            <td>@{
+                                j + 1
+                            }</td>
+                            <td>@testCaseResult.getVerdict.getName</td>
+                            <td>@testCaseResult.getScore</td>
+                            <td>@testCaseResult.getDetails.getTimeInMilliseconds ms</td>
+                            <td>@testCaseResult.getDetails.getMemoryInKilobytes KB</td>
+                            @if(details.getSubtaskResults.get(0).getId != -1) {
+                                <td>@Joiner.on(", ").join(testCaseResult.getSubtaskIds)</td>
+                            }
+                        </tr>
+                    }
+                }
+                </tbody>
+            </table>
+        </div>
+        </div>
+    }
+}else{
+    <p>(No test data)</p>
+}}
+
+@if(details != null && details.getSubtaskResults.size >= 1 && details.getSubtaskResults.get(0).getId != -1) {
     <h4>Subtask Results</h4>
     <div class="panel panel-default">
         <div class="panel-body">
