@@ -4,11 +4,14 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.commons.SubmissionAdapter;
+import org.iatoki.judgels.commons.SubmissionException;
 import org.iatoki.judgels.commons.views.html.adapters.blackBoxViewSubmissionView;
 import org.iatoki.judgels.commons.views.html.adapters.blackBoxViewStatementView;
 import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.GradingRequest;
 import org.iatoki.judgels.gabriel.GradingSource;
+import org.iatoki.judgels.gabriel.Language;
+import org.iatoki.judgels.gabriel.LanguageRegistry;
 import org.iatoki.judgels.gabriel.Verdict;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingRequest;
@@ -24,9 +27,9 @@ import java.io.IOException;
 public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
 
     @Override
-    public Html renderViewStatement(Call targetCall, String statement, GradingConfig config) {
+    public Html renderViewStatement(Call targetCall, String name, String statement, GradingConfig config) {
         BlackBoxGradingConfig blackBoxConfig = (BlackBoxGradingConfig) config;
-        return blackBoxViewStatementView.render(targetCall, statement, blackBoxConfig);
+        return blackBoxViewStatementView.render(targetCall, name, statement, blackBoxConfig);
     }
 
     @Override
@@ -40,24 +43,36 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
     public GradingSource createGradingSource(GradingConfig config, Http.MultipartFormData body) {
         BlackBoxGradingConfig blackBoxConfig = (BlackBoxGradingConfig) config;
 
+        String gradingLanguage = body.asFormUrlEncoded().get("language")[0];
+
+        Language language = LanguageRegistry.getInstance().getLanguage(gradingLanguage);
+
         ImmutableMap.Builder<String, SourceFile> sourceFiles = ImmutableMap.builder();
 
         for (String key : blackBoxConfig.getRequiredSourceFileKeys()) {
             Http.MultipartFormData.FilePart file = body.getFile(key);
 
             if (file == null) {
-                throw new RuntimeException("file can't be null");
+                throw new SubmissionException("You must submit a file for " + key + ".");
             }
 
             try {
+                String filename = file.getFilename();
                 String content = FileUtils.readFileToString(file.getFile());
+
+                String verification = language.verifyFile(filename, content);
+
+                if (verification != null) {
+                    throw new SubmissionException(verification);
+                }
+
                 sourceFiles.put(key, new SourceFile(file.getFilename(), content));
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new SubmissionException(e.getMessage());
             }
         }
 
-        return new BlackBoxGradingSource("Cpp", sourceFiles.build());
+        return new BlackBoxGradingSource(gradingLanguage, sourceFiles.build());
     }
 
     @Override
