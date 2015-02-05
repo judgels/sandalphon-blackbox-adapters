@@ -1,4 +1,4 @@
-@(targetCall: play.api.mvc.Call, name: String, statement: String, config: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig)
+@(postSubmitUri: String, name: String, statement: String, config: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig, engine: String, gradingLastUpdateTime: Long)
 
 @import play.i18n.Messages
 @import org.iatoki.judgels.gabriel.GradingLanguageRegistry
@@ -18,10 +18,13 @@
 
 <hr />
 <h4>Submit Solution</h4>
+
 @implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-2", "col-md-10") }
 
-@b3.form(targetCall, 'enctype->"multipart/form-data") {
-    @helper.CSRF.formField
+@b3.form(play.api.mvc.Call("POST", postSubmitUri), 'enctype->"multipart/form-data") {
+
+    @b3.hidden("engine", engine)
+    @b3.hidden("gradingLastUpdateTime", gradingLastUpdateTime)
 
     @for((k, v) <- config.getSourceFileFields) {
         <div class="form-group">

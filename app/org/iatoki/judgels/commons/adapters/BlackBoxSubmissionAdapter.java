@@ -29,9 +29,9 @@ import java.util.Map;
 public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
 
     @Override
-    public Html renderViewStatement(Call targetCall, String name, String statement, GradingConfig config) {
+    public Html renderViewStatement(String postSubmitUri, String name, String statement, GradingConfig config, String engine, long gradingLastUpdateTime) {
         BlackBoxGradingConfig blackBoxConfig = (BlackBoxGradingConfig) config;
-        return blackBoxViewStatementView.render(targetCall, name, statement, blackBoxConfig);
+        return blackBoxViewStatementView.render(postSubmitUri, name, statement, blackBoxConfig, engine, gradingLastUpdateTime);
     }
 
     @Override
@@ -41,20 +41,14 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
     }
 
     @Override
-    public GradingSource createGradingSourceFromNewSubmission(GradingConfig config, Http.MultipartFormData body) {
-        BlackBoxGradingConfig blackBoxConfig = (BlackBoxGradingConfig) config;
+    public GradingSource createGradingSourceFromNewSubmission(Http.MultipartFormData body) {
 
         String gradingLanguage = body.asFormUrlEncoded().get("language")[0];
         GradingLanguage language = GradingLanguageRegistry.getInstance().getLanguage(gradingLanguage);
 
         ImmutableMap.Builder<String, SourceFile> sourceFiles = ImmutableMap.builder();
 
-        for (Map.Entry<String, String> entry : blackBoxConfig.getSourceFileFields().entrySet()) {
-            Http.MultipartFormData.FilePart file = body.getFile(entry.getKey());
-
-            if (file == null) {
-                throw new SubmissionException("You must submit a file for '" + entry.getValue() + "'.");
-            }
+        for (Http.MultipartFormData.FilePart file : body.getFiles()) {
 
             try {
                 String filename = file.getFilename();
@@ -66,7 +60,7 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
                     throw new SubmissionException(verification);
                 }
 
-                sourceFiles.put(entry.getKey(), new SourceFile(file.getFilename(), content));
+                sourceFiles.put(file.getKey(), new SourceFile(file.getFilename(), content));
             } catch (IOException e) {
                 throw new SubmissionException(e.getMessage());
             }
@@ -76,19 +70,17 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
     }
 
     @Override
-    public GradingSource createGradingSourceFromPastSubmission(GradingConfig config, File submissionBaseDir, String submissionJid) {
+    public GradingSource createGradingSourceFromPastSubmission(File submissionBaseDir, String submissionJid) {
         File submissionDir = new File(submissionBaseDir, submissionJid);
-        BlackBoxGradingConfig blackBoxConfig = (BlackBoxGradingConfig) config;
 
         ImmutableMap.Builder<String, SourceFile> sourceFiles = ImmutableMap.builder();
 
-        for (Map.Entry<String, String> entry : blackBoxConfig.getSourceFileFields().entrySet()) {
-            File sourceFileDir = new File(submissionDir, entry.getKey());
+        for (File fieldKey : submissionDir.listFiles()) {
             try {
-                File sourceFile = sourceFileDir.listFiles()[0];
+                File sourceFile = fieldKey.listFiles()[0];
                 String name = sourceFile.getName();
                 String content = FileUtils.readFileToString(sourceFile);
-                sourceFiles.put(entry.getKey(), new SourceFile(name, content));
+                sourceFiles.put(fieldKey.getName(), new SourceFile(name, content));
             } catch (NullPointerException | IOException e) {
                 throw new RuntimeException(e);
             }
