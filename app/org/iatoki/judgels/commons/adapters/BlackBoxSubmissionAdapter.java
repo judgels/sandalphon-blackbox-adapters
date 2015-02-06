@@ -44,11 +44,23 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
     public GradingSource createGradingSourceFromNewSubmission(Http.MultipartFormData body) {
 
         String gradingLanguage = body.asFormUrlEncoded().get("language")[0];
+        String sourceFileFieldKeysUnparsed = body.asFormUrlEncoded().get("sourceFileFieldKeys")[0];
+
+        if (gradingLanguage == null || sourceFileFieldKeysUnparsed == null) {
+            return new BlackBoxGradingSource(ImmutableMap.of());
+        }
+
         GradingLanguage language = GradingLanguageRegistry.getInstance().getLanguage(gradingLanguage);
 
+        String[] sourceFileFieldKeys = sourceFileFieldKeysUnparsed.split(",");
         ImmutableMap.Builder<String, SourceFile> sourceFiles = ImmutableMap.builder();
 
-        for (Http.MultipartFormData.FilePart file : body.getFiles()) {
+        for (String fieldKey : sourceFileFieldKeys) {
+
+            Http.MultipartFormData.FilePart file = body.getFile(fieldKey);
+            if (file == null) {
+                throw new SubmissionException("You must submit a source file for '" + fieldKey + "'");
+            }
 
             try {
                 String filename = file.getFilename();
@@ -76,8 +88,15 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
         ImmutableMap.Builder<String, SourceFile> sourceFiles = ImmutableMap.builder();
 
         for (File fieldKey : submissionDir.listFiles()) {
+
+            File[] sourceFilesInDir = fieldKey.listFiles();
+            if (sourceFilesInDir == null) {
+                continue;
+            }
+
+            File sourceFile = sourceFilesInDir[0];
+
             try {
-                File sourceFile = fieldKey.listFiles()[0];
                 String name = sourceFile.getName();
                 String content = FileUtils.readFileToString(sourceFile);
                 sourceFiles.put(fieldKey.getName(), new SourceFile(name, content));
@@ -98,15 +117,17 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
     public void storeSubmissionFiles(File submissionBaseDir, String submissionJid, GradingSource source) {
         File submissionDir = new File(submissionBaseDir, submissionJid);
 
-        for (Map.Entry<String, SourceFile> entry : ((BlackBoxGradingSource) source).getSourceFiles().entrySet()) {
-            File sourceFileDir = new File(submissionDir, entry.getKey());
-            try {
+        try {
+            FileUtils.forceMkdir(submissionDir);
+
+            for (Map.Entry<String, SourceFile> entry : ((BlackBoxGradingSource) source).getSourceFiles().entrySet()) {
+                File sourceFileDir = new File(submissionDir, entry.getKey());
                 FileUtils.forceMkdir(sourceFileDir);
                 File sourceFile = new File(sourceFileDir, entry.getValue().getName());
                 FileUtils.writeStringToFile(sourceFile, entry.getValue().getContent());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
