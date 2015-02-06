@@ -22,7 +22,7 @@ public final class BatchWithSubtasksGradingConfigAdapter extends SingleSourceFil
         fillSingleSourceFileWithSubtasksGradingConfigFormPartsFromConfig(form, castConfig);
 
         if (castConfig.getCustomScorer() == null) {
-            form.customScorer = "(None)";
+            form.customScorer = "(none)";
         } else {
             form.customScorer = castConfig.getCustomScorer();
         }
@@ -48,7 +48,7 @@ public final class BatchWithSubtasksGradingConfigAdapter extends SingleSourceFil
         List<Integer> subtaskPoints = (List<Integer>) parts.get(3);
 
         String customScorer;
-        if (formData.customScorer.equals("(None)")) {
+        if (formData.customScorer.equals("(none)")) {
             customScorer = null;
         } else {
             customScorer = formData.customScorer;

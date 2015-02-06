@@ -22,7 +22,7 @@ public final class InteractiveWithSubtasksGradingConfigAdapter extends SingleSou
         fillSingleSourceFileWithSubtasksGradingConfigFormPartsFromConfig(form, castConfig);
 
         if (castConfig.getCommunicator() == null) {
-            form.communicator = "(None)";
+            form.communicator = "(none)";
         } else {
             form.communicator = castConfig.getCommunicator();
         }
@@ -48,7 +48,7 @@ public final class InteractiveWithSubtasksGradingConfigAdapter extends SingleSou
         List<Integer> subtaskPoints = (List<Integer>) parts.get(3);
 
         String customScorer;
-        if (formData.communicator.equals("(None)")) {
+        if (formData.communicator.equals("(none)")) {
             customScorer = null;
         } else {
             customScorer = formData.communicator;
