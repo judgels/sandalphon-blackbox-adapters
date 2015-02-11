@@ -1,13 +1,10 @@
-package org.iatoki.judgels.commons.adapters;
+package org.iatoki.judgels.sandalphon.commons;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
-import org.iatoki.judgels.commons.Submission;
-import org.iatoki.judgels.commons.SubmissionAdapter;
-import org.iatoki.judgels.commons.SubmissionException;
-import org.iatoki.judgels.commons.views.html.adapters.blackBoxViewSubmissionView;
-import org.iatoki.judgels.commons.views.html.adapters.blackBoxViewStatementView;
+import org.iatoki.judgels.sandalphon.commons.views.html.blackBoxViewSubmissionView;
+import org.iatoki.judgels.sandalphon.commons.views.html.blackBoxViewStatementView;
 import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.GradingRequest;
 import org.iatoki.judgels.gabriel.GradingSource;
@@ -18,7 +15,6 @@ import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingRequest;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingSource;
 import org.iatoki.judgels.gabriel.blackbox.SourceFile;
-import play.api.mvc.Call;
 import play.mvc.Http;
 import play.twirl.api.Html;
 

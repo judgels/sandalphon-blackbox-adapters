@@ -1,4 +1,4 @@
-@(submission: org.iatoki.judgels.commons.Submission, details: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails, sourceFiles: Map[String, org.iatoki.judgels.gabriel.blackbox.SourceFile])
+@(submission: org.iatoki.judgels.sandalphon.commons.Submission, details: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails, sourceFiles: Map[String, org.iatoki.judgels.gabriel.blackbox.SourceFile])
 
 @import com.google.common.base.Joiner
 
@@ -10,14 +10,11 @@
         <table class="table table-condensed">
             <thead>
                 <tr>
-                    <th>Info</th>
-                    <th>Value</th>
+                    <th class="col-md-3">Info</th>
+                    <th class="col-md-9">Value</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Jid</td><td>@submission.getJid</td>
-                </tr>
                 <tr>
                     <td>Author</td><td>@submission.getAuthorJid</td>
                 </tr>
@@ -66,13 +63,13 @@
             <table class="table table-condensed">
                 <thead>
                     <tr>
-                        <th>Id</th>
-                        <th>Verdict</th>
-                        <th>Score</th>
-                        <th>Time</th>
-                        <th>Memory</th>
+                        <th class="col-md-1">Id</th>
+                        <th class="col-md-3">Verdict</th>
+                        <th class="col-md-2">Score</th>
+                        <th class="col-md-2">Time</th>
+                        <th class="col-md-2">Memory</th>
                         @if(details.getSubtaskResults.get(0).getId != -1) {
-                            <th>Subtasks</th>
+                            <th class="col-md-2">Subtasks</th>
                         }
                     </tr>
                 </thead>
@@ -117,13 +114,13 @@
             <table class="table table-condensed">
                 <thead>
                     <tr>
-                        <th>Id</th>
-                        <th>Verdict</th>
-                        <th>Score</th>
-                        <th>Time</th>
-                        <th>Memory</th>
+                        <th class="col-md-1">Id</th>
+                        <th class="col-md-3">Verdict</th>
+                        <th class="col-md-2">Score</th>
+                        <th class="col-md-2">Time</th>
+                        <th class="col-md-2">Memory</th>
                         @if(details.getSubtaskResults.get(0).getId != -1) {
-                            <th>Subtasks</th>
+                            <th class="col-md-2">Subtasks</th>
                         }
                     </tr>
                 </thead>
@@ -140,7 +137,10 @@
                             <td>@testCaseResult.getDetails.getTimeInMilliseconds ms</td>
                             <td>@testCaseResult.getDetails.getMemoryInKilobytes KB</td>
                             @if(details.getSubtaskResults.get(0).getId != -1) {
-                                <td>@Joiner.on(", ").join(testCaseResult.getSubtaskIds)</td>
+                                <td>@for(id <- testCaseResult.getSubtaskIds) {
+                                    <span class="badge">@id</span>
+                                }
+                                </td>
                             }
                         </tr>
                     }
@@ -161,9 +161,10 @@
             <table class="table table-condensed">
                 <thead>
                     <tr>
-                        <th>Id</th>
-                        <th>Verdict</th>
-                        <th>Score</th>
+                        <th class="col-md-1">Id</th>
+                        <th class="col-md-3">Verdict</th>
+                        <th class="col-md-2">Score</th>
+                        <th class="col-md-6"></th>
                     </tr>
                 </thead>
 
@@ -174,6 +175,7 @@
                                 <td>@{i + 1}</td>
                                 <td>@subtaskResult.getVerdict.getName</td>
                                 <td>@subtaskResult.getScore</td>
+                                <td></td>
                             </tr>
                         }
                     }

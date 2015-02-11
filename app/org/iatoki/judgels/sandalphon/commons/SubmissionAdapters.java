@@ -1,6 +1,4 @@
-package org.iatoki.judgels.commons;
-
-import org.iatoki.judgels.commons.adapters.BlackBoxSubmissionAdapter;
+package org.iatoki.judgels.sandalphon.commons;
 
 public final class SubmissionAdapters {
     private SubmissionAdapters() {
