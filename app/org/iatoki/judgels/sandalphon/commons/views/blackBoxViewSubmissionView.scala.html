@@ -1,6 +1,7 @@
 @(submission: org.iatoki.judgels.sandalphon.commons.Submission, details: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails, sourceFiles: Map[String, org.iatoki.judgels.gabriel.blackbox.SourceFile])
 
 @import com.google.common.base.Joiner
+@import org.iatoki.judgels.commons.JudgelsUtils
 
 <h3>Submission #@submission.getId</h3>
 
@@ -22,7 +23,7 @@
                     <td>Language</td><td>@submission.getGradingLanguage</td>
                 </tr>
                 <tr>
-                    <td>Time</td><td>@submission.getTimestamp</td>
+                    <td>Time</td><td>@JudgelsUtils.timestampToFormattedDate(submission.getTimestamp)</td>
                 </tr>
                 <tr>
                     <td>Verdict</td><td>@submission.getVerdict.getCode (@submission.getVerdict.getName)</td>
