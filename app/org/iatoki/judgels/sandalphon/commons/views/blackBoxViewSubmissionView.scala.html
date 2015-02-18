@@ -1,4 +1,4 @@
-@(submission: org.iatoki.judgels.sandalphon.commons.Submission, details: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails, sourceFiles: Map[String, org.iatoki.judgels.gabriel.blackbox.SourceFile])
+@(submission: org.iatoki.judgels.sandalphon.commons.Submission, details: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails, sourceFiles: Map[String, org.iatoki.judgels.gabriel.blackbox.SourceFile], jidCacheService: org.iatoki.judgels.commons.AbstractJidCacheService[_])
 
 @import com.google.common.base.Joiner
 @import org.iatoki.judgels.commons.JudgelsUtils
@@ -17,16 +17,16 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>Author</td><td>@submission.getAuthorJid</td>
+                    <td>Author</td><td>@jidCacheService.getDisplayName(submission.getAuthorJid)</td>
                 </tr>
                 <tr>
                     <td>Language</td><td>@submission.getGradingLanguage</td>
                 </tr>
                 <tr>
-                    <td>Time</td><td>@JudgelsUtils.timestampToFormattedDate(submission.getTimestamp)</td>
+                    <td>Time</td><td>@JudgelsUtils.formatDate(submission.getTime)</td>
                 </tr>
                 <tr>
-                    <td>Verdict</td><td>@submission.getVerdict.getCode (@submission.getVerdict.getName)</td>
+                    <td>Verdict</td><td>@submission.getVerdict.getName</td>
                 </tr>
                 <tr>
                     <td>Score</td><td>@submission.getScore</td>
@@ -36,18 +36,34 @@
     </div>
 </div>
 
-<h4>Source Files</h4>
-@for((key, sourceFile) <- sourceFiles) {
+
+@if(details != null && details.getSubtaskResults.size >= 1 && details.getSubtaskResults.get(0).getId != -1) {
+    <h4>Subtask Results</h4>
     <div class="panel panel-default">
-        <div class="panel-heading">@key - @sourceFile.getName</div>
         <div class="panel-body">
-            <pre>@sourceFile.getContent</pre>
-            <p>Compilation Output:</p>
-            @if(details != null) {
-                <pre>@details.getCompilationOutputs.get(key)</pre>
-            }else{
-                <p>(Not compiled yet)</p>
-            }
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th class="col-md-1">Id</th>
+                        <th class="col-md-3">Verdict</th>
+                        <th class="col-md-2">Score</th>
+                        <th class="col-md-6"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                @for(i <- 0 until details.getSubtaskResults.size) {
+                    @defining(details.getSubtaskResults.get(i)) { subtaskResult =>
+                        <tr>
+                            <td>@{i + 1}</td>
+                            <td>@subtaskResult.getVerdict.getName</td>
+                            <td>@subtaskResult.getScore</td>
+                            <td></td>
+                        </tr>
+                    }
+                }
+                </tbody>
+            </table>
         </div>
     </div>
 }
@@ -56,7 +72,7 @@
 <h4>Sample Test Data Results</h4>
 
 @if(details == null) {
-    <p>(Not run yet)</p>
+    <p>(No info)</p>
 }else{
 @if(details.getTestDataResults.size >= 1) {
     <div class="panel panel-default">
@@ -87,7 +103,9 @@
                             <td>@testCaseResult.getExecutionResult.getTimeInMilliseconds ms</td>
                             <td>@testCaseResult.getExecutionResult.getMemoryInKilobytes KB</td>
                             @if(details.getSubtaskResults.get(0).getId != -1) {
-                                <td>@Joiner.on(", ").join(testCaseResult.getSubtaskIds)</td>
+                                <td>@for(id <- testCaseResult.getSubtaskIds) {
+                                    <span class="badge">@id</span>
+                                }</td>
                             }
                         </tr>
                     }
@@ -97,13 +115,13 @@
         </div>
     </div>
 }else{
-    <p>(No sample test cases)</p>
+    <p>(No info)</p>
 }}
 
 <h4>Test Data Results</h4>
 
 @if(details == null) {
-    <p>(Not run yet)</p>
+    <p>(No info)</p>
 }else{
 @if(details.getTestDataResults.size >= 2) {
     @for(i <- 1 until details.getTestDataResults.size()) {
@@ -152,36 +170,21 @@
         </div>
     }
 }else{
-    <p>(No test data)</p>
+    <p>(No info)</p>
 }}
 
-@if(details != null && details.getSubtaskResults.size >= 1 && details.getSubtaskResults.get(0).getId != -1) {
-    <h4>Subtask Results</h4>
+<h4>Source Files</h4>
+@for((key, sourceFile) <- sourceFiles) {
     <div class="panel panel-default">
+        <div class="panel-heading">@key - @sourceFile.getName</div>
         <div class="panel-body">
-            <table class="table table-condensed">
-                <thead>
-                    <tr>
-                        <th class="col-md-1">Id</th>
-                        <th class="col-md-3">Verdict</th>
-                        <th class="col-md-2">Score</th>
-                        <th class="col-md-6"></th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    @for(i <- 0 until details.getSubtaskResults.size) {
-                        @defining(details.getSubtaskResults.get(i)) { subtaskResult =>
-                            <tr>
-                                <td>@{i + 1}</td>
-                                <td>@subtaskResult.getVerdict.getName</td>
-                                <td>@subtaskResult.getScore</td>
-                                <td></td>
-                            </tr>
-                        }
-                    }
-                </tbody>
-            </table>
+            <pre>@sourceFile.getContent</pre>
+            <p>Compilation Output:</p>
+            @if(details != null) {
+                <pre>@details.getCompilationOutputs.get(key)</pre>
+            }else{
+                <p>(No info)</p>
+            }
         </div>
     </div>
 }
