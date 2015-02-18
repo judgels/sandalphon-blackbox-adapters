@@ -58,8 +58,8 @@ public final class InteractiveWithSubtasksGradingConfigAdapter extends SingleSou
     }
 
     @Override
-    public Form<?> createFormFromRequest(Http.Request request) {
-        return Form.form(InteractiveWithSubtasksGradingConfigForm.class).bindFromRequest(request);
+    public Form<?> createEmptyForm() {
+        return Form.form(InteractiveWithSubtasksGradingConfigForm.class);
     }
 
     @Override

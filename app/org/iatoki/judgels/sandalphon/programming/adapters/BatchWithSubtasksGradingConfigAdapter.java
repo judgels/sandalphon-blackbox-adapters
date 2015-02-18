@@ -58,8 +58,8 @@ public final class BatchWithSubtasksGradingConfigAdapter extends SingleSourceFil
     }
 
     @Override
-    public Form<?> createFormFromRequest(Http.Request request) {
-        return Form.form(BatchWithSubtasksGradingConfigForm.class).bindFromRequest(request);
+    public Form<?> createEmptyForm() {
+        return Form.form(BatchWithSubtasksGradingConfigForm.class);
     }
 
     @Override
