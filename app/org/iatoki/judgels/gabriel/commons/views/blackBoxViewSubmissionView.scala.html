@@ -1,6 +1,5 @@
-@(submission: org.iatoki.judgels.sandalphon.commons.Submission, details: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails, sourceFiles: Map[String, org.iatoki.judgels.gabriel.blackbox.SourceFile], jidCacheService: org.iatoki.judgels.commons.AbstractJidCacheService[_])
+@(submission: org.iatoki.judgels.gabriel.commons.Submission, details: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails, sourceFiles: Map[String, org.iatoki.judgels.gabriel.blackbox.SourceFile], jidCacheService: org.iatoki.judgels.commons.AbstractJidCacheService[_])
 
-@import com.google.common.base.Joiner
 @import org.iatoki.judgels.commons.JudgelsUtils
 
 <h3>Submission #@submission.getId</h3>
@@ -26,10 +25,10 @@
                     <td>Time</td><td>@JudgelsUtils.formatDate(submission.getTime)</td>
                 </tr>
                 <tr>
-                    <td>Verdict</td><td>@submission.getVerdict.getName</td>
+                    <td>Verdict</td><td>@submission.getLatestVerdict.getName</td>
                 </tr>
                 <tr>
-                    <td>Score</td><td>@submission.getScore</td>
+                    <td>Score</td><td>@submission.getLatestScore</td>
                 </tr>
             </tbody>
         </table>
@@ -85,7 +84,7 @@
                         <th class="col-md-2">Score</th>
                         <th class="col-md-2">Time</th>
                         <th class="col-md-2">Memory</th>
-                        @if(details.getSubtaskResults.get(0).getId != -1) {
+                        @if(!details.getSubtaskResults.isEmpty && details.getSubtaskResults.get(0).getId != -1) {
                             <th class="col-md-2">Subtasks</th>
                         }
                     </tr>
@@ -102,7 +101,7 @@
                             <td>@testCaseResult.getScore</td>
                             <td>@testCaseResult.getExecutionResult.getTimeInMilliseconds ms</td>
                             <td>@testCaseResult.getExecutionResult.getMemoryInKilobytes KB</td>
-                            @if(details.getSubtaskResults.get(0).getId != -1) {
+                            @if(!details.getSubtaskResults.isEmpty && details.getSubtaskResults.get(0).getId != -1) {
                                 <td>@for(id <- testCaseResult.getSubtaskIds) {
                                     <span class="badge">@id</span>
                                 }</td>
@@ -138,7 +137,7 @@
                         <th class="col-md-2">Score</th>
                         <th class="col-md-2">Time</th>
                         <th class="col-md-2">Memory</th>
-                        @if(details.getSubtaskResults.get(0).getId != -1) {
+                        @if(!details.getSubtaskResults.isEmpty && details.getSubtaskResults.get(0).getId != -1) {
                             <th class="col-md-2">Subtasks</th>
                         }
                     </tr>
@@ -155,7 +154,7 @@
                             <td>@testCaseResult.getScore</td>
                             <td>@testCaseResult.getExecutionResult.getTimeInMilliseconds ms</td>
                             <td>@testCaseResult.getExecutionResult.getMemoryInKilobytes KB</td>
-                            @if(details.getSubtaskResults.get(0).getId != -1) {
+                            @if(!details.getSubtaskResults.isEmpty && details.getSubtaskResults.get(0).getId != -1) {
                                 <td>@for(id <- testCaseResult.getSubtaskIds) {
                                     <span class="badge">@id</span>
                                 }

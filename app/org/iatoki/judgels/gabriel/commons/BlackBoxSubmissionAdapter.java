@@ -1,11 +1,11 @@
-package org.iatoki.judgels.sandalphon.commons;
+package org.iatoki.judgels.gabriel.commons;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.commons.AbstractJidCacheService;
-import org.iatoki.judgels.sandalphon.commons.views.html.blackBoxViewSubmissionView;
-import org.iatoki.judgels.sandalphon.commons.views.html.blackBoxViewStatementView;
+import org.iatoki.judgels.gabriel.commons.views.html.blackBoxViewSubmissionView;
+import org.iatoki.judgels.gabriel.commons.views.html.blackBoxViewStatementView;
 import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.GradingRequest;
 import org.iatoki.judgels.gabriel.GradingSource;
@@ -34,7 +34,7 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
 
     @Override
     public Html renderViewSubmission(Submission submission, GradingSource source, AbstractJidCacheService<?> jidCacheService) {
-        BlackBoxGradingResultDetails details = new Gson().fromJson(submission.getDetails(), BlackBoxGradingResultDetails.class);
+        BlackBoxGradingResultDetails details = new Gson().fromJson(submission.getLatestDetails(), BlackBoxGradingResultDetails.class);
         return blackBoxViewSubmissionView.render(submission, details, ((BlackBoxGradingSource) source).getSourceFiles(), jidCacheService);
     }
 
@@ -107,8 +107,8 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
     }
 
     @Override
-    public GradingRequest createGradingRequest(String submissionJid, String problemJid, Date gradingLastUpdateTime, String gradingEngine, String gradingLanguage, GradingSource gradingSource) {
-        return new BlackBoxGradingRequest(submissionJid, problemJid, gradingLastUpdateTime.getTime(), gradingEngine, gradingLanguage, (BlackBoxGradingSource) gradingSource);
+    public GradingRequest createGradingRequest(String gradingJid, String problemJid, Date gradingLastUpdateTime, String gradingEngine, String gradingLanguage, GradingSource gradingSource) {
+        return new BlackBoxGradingRequest(gradingJid, problemJid, gradingLastUpdateTime.getTime(), gradingEngine, gradingLanguage, (BlackBoxGradingSource) gradingSource);
     }
 
     @Override

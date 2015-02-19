@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.commons;
+package org.iatoki.judgels.gabriel.commons;
 
 public final class SubmissionAdapters {
     private SubmissionAdapters() {
