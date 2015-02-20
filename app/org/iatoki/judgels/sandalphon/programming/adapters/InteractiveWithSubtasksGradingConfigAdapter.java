@@ -1,6 +1,9 @@
 package org.iatoki.judgels.sandalphon.programming.adapters;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.iatoki.judgels.gabriel.GradingConfig;
+import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.InteractiveWithSubtasksGradingConfig;
 import org.iatoki.judgels.sandalphon.programming.forms.configs.InteractiveWithSubtasksGradingConfigForm;
@@ -11,7 +14,9 @@ import play.mvc.Http;
 import play.twirl.api.Html;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public final class InteractiveWithSubtasksGradingConfigAdapter extends SingleSourceFileWithSubtasksGradingConfigAdapter {
 
@@ -55,6 +60,84 @@ public final class InteractiveWithSubtasksGradingConfigAdapter extends SingleSou
         }
 
         return new InteractiveWithSubtasksGradingConfig(timeLimit, memoryLimit, testData, subtaskPoints, customScorer);
+    }
+
+    @Override
+    public GradingConfig createConfigFromTokilib(List<File> testDataFiles) {
+        Set<String> filenames = Sets.newHashSet(Lists.transform(testDataFiles, f -> f.getName()));
+        Set<String> filenamesNoExt = Sets.newHashSet();
+        for (String filename : filenames) {
+            String[] parts = filename.split("\\.");
+            if (parts.length != 2) {
+                continue;
+            }
+
+            filenamesNoExt.add(parts[0]);
+        }
+
+        List<TokilibFile> tokilibFiles = Lists.newArrayList();
+
+        for (String filename : filenamesNoExt) {
+            if (!filenames.contains(filename + ".in")) {
+                continue;
+            }
+
+            String[] parts = filename.split("_");
+
+            if (parts.length != 3) {
+                continue;
+            }
+
+            try {
+                String name = parts[0];
+                int batchNo = Integer.parseInt(parts[1]);
+                int tcNo = Integer.parseInt(parts[2]);
+
+                tokilibFiles.add(new TokilibFile(name, batchNo, tcNo));
+            } catch (NumberFormatException e) {
+
+            }
+        }
+
+        Collections.sort(tokilibFiles);
+
+        int maxBatchNo = 0;
+        for (TokilibFile file : tokilibFiles) {
+            maxBatchNo = Math.max(maxBatchNo, file.batchNo);
+        }
+
+        List<TestGroup> testData = Lists.newArrayList();
+        for (int i = 0; i <= maxBatchNo; i++) {
+            testData.add(new TestGroup(i, Lists.newArrayList()));
+        }
+
+        for (TokilibFile file : tokilibFiles) {
+            String name = file.filename;
+            int batchNo = file.batchNo;
+            int tcNo = file.tcNo;
+
+            String filename = name + "_" + batchNo + "_" + tcNo;
+            Set<Integer> subtaskIds = Sets.newHashSet();
+
+            if (batchNo == 0) {
+                subtaskIds.add(0);
+            } else {
+                for (int i = batchNo; i <= maxBatchNo; i++) {
+                    subtaskIds.add(i);
+                }
+            }
+
+            TestCase testCase = new TestCase(filename + ".in", null, subtaskIds);
+
+            testData.get(file.batchNo).getTestCases().add(testCase);
+        }
+
+        List<Integer> subtaskPoints = Lists.newArrayList();
+        for (int i = 1; i <= maxBatchNo; i++) {
+            subtaskPoints.add(0);
+        }
+
+        return new InteractiveWithSubtasksGradingConfig(2000, 65536, testData, subtaskPoints, null);
     }
 
     @Override
