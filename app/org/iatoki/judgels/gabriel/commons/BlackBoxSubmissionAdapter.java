@@ -33,9 +33,9 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
     }
 
     @Override
-    public Html renderViewSubmission(Submission submission, GradingSource source, AbstractJidCacheService<?> jidCacheService) {
+    public Html renderViewSubmission(Submission submission, GradingSource source, AbstractJidCacheService<?> jidCacheService, String problemAlias, String gradingLanguageName, String contestName) {
         BlackBoxGradingResultDetails details = new Gson().fromJson(submission.getLatestDetails(), BlackBoxGradingResultDetails.class);
-        return blackBoxViewSubmissionView.render(submission, details, ((BlackBoxGradingSource) source).getSourceFiles(), jidCacheService);
+        return blackBoxViewSubmissionView.render(submission, details, ((BlackBoxGradingSource) source).getSourceFiles(), jidCacheService, problemAlias, gradingLanguageName, contestName);
     }
 
     @Override

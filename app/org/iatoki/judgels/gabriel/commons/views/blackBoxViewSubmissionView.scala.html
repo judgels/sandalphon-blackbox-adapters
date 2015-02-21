@@ -1,4 +1,4 @@
-@(submission: org.iatoki.judgels.gabriel.commons.Submission, details: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails, sourceFiles: Map[String, org.iatoki.judgels.gabriel.blackbox.SourceFile], jidCacheService: org.iatoki.judgels.commons.AbstractJidCacheService[_])
+@(submission: org.iatoki.judgels.gabriel.commons.Submission, details: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails, sourceFiles: Map[String, org.iatoki.judgels.gabriel.blackbox.SourceFile], jidCacheService: org.iatoki.judgels.commons.AbstractJidCacheService[_], problemAlias: String, gradingLanguageName: String, contestName: String)
 
 @import org.iatoki.judgels.commons.JudgelsUtils
 
@@ -19,7 +19,15 @@
                     <td>Author</td><td>@jidCacheService.getDisplayName(submission.getAuthorJid)</td>
                 </tr>
                 <tr>
-                    <td>Language</td><td>@submission.getGradingLanguage</td>
+                    <td>Problem</td><td>@if(problemAlias != null) { @problemAlias - } @jidCacheService.getDisplayName(submission.getProblemJid)</td>
+                </tr>
+                @if(contestName != null) {
+                    <tr>
+                        <td>Contest</td><td>@contestName</td>
+                    </tr>
+                }
+                <tr>
+                    <td>Language</td><td>@gradingLanguageName</td>
                 </tr>
                 <tr>
                     <td>Time</td><td>@JudgelsUtils.formatDate(submission.getTime)</td>
