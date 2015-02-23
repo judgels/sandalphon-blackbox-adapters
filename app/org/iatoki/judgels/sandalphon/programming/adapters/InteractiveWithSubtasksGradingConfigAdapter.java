@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public final class InteractiveWithSubtasksGradingConfigAdapter extends SingleSourceFileWithSubtasksBlackBoxGradingConfigAdapter {
+public final class InteractiveWithSubtasksGradingConfigAdapter extends SingleSourceFileWithSubtasksBlackBoxGradingConfigAdapter implements ConfigurableWithTokilibFormat {
 
     @Override
     public Form<?> createFormFromConfig(GradingConfig config) {
@@ -62,7 +62,7 @@ public final class InteractiveWithSubtasksGradingConfigAdapter extends SingleSou
     }
 
     @Override
-    public GradingConfig createConfigFromTokilib(List<File> testDataFiles) {
+    public GradingConfig updateConfigWithTokilibFormat(GradingConfig config, List<File> testDataFiles) {
         Set<String> filenames = Sets.newHashSet(Lists.transform(testDataFiles, f -> f.getName()));
         Set<String> filenamesNoExt = Sets.newHashSet();
         for (String filename : filenames) {
@@ -94,7 +94,7 @@ public final class InteractiveWithSubtasksGradingConfigAdapter extends SingleSou
 
                 tokilibFiles.add(new TokilibFile(name, batchNo, tcNo));
             } catch (NumberFormatException e) {
-
+                // just skip it
             }
         }
 
@@ -136,7 +136,9 @@ public final class InteractiveWithSubtasksGradingConfigAdapter extends SingleSou
             subtaskPoints.add(0);
         }
 
-        return new InteractiveWithSubtasksGradingConfig(2000, 65536, testData, subtaskPoints, null);
+        InteractiveWithSubtasksGradingConfig castConfig = (InteractiveWithSubtasksGradingConfig) config;
+
+        return new InteractiveWithSubtasksGradingConfig(castConfig.getTimeLimitInMilliseconds(), castConfig.getMemoryLimitInKilobytes(), testData, subtaskPoints, castConfig.getCommunicator());
     }
 
     @Override

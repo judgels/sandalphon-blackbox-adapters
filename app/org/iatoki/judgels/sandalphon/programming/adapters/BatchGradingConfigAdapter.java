@@ -1,6 +1,5 @@
 package org.iatoki.judgels.sandalphon.programming.adapters;
 
-import com.google.common.collect.ImmutableList;
 import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.BatchGradingConfig;
@@ -56,11 +55,6 @@ public final class BatchGradingConfigAdapter extends SingleSourceFileWithoutSubt
         }
 
         return new BatchGradingConfig(timeLimit, memoryLimit, testData, customScorer);
-    }
-
-    @Override
-    public GradingConfig createConfigFromTokilib(List<File> testDataFiles) {
-        return null;
     }
 
     @Override

@@ -3,6 +3,7 @@ package org.iatoki.judgels.sandalphon.programming.adapters;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.iatoki.judgels.gabriel.GradingConfig;
+import org.iatoki.judgels.gabriel.blackbox.Subtask;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.BatchWithSubtasksGradingConfig;
@@ -17,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public final class BatchWithSubtasksGradingConfigAdapter extends SingleSourceFileWithSubtasksBlackBoxGradingConfigAdapter {
+public final class BatchWithSubtasksGradingConfigAdapter extends SingleSourceFileWithSubtasksBlackBoxGradingConfigAdapter implements ConfigurableWithTokilibFormat {
 
     @Override
     public Form<?> createFormFromConfig(GradingConfig config) {
@@ -62,7 +63,7 @@ public final class BatchWithSubtasksGradingConfigAdapter extends SingleSourceFil
     }
 
     @Override
-    public GradingConfig createConfigFromTokilib(List<File> testDataFiles) {
+    public GradingConfig updateConfigWithTokilibFormat(GradingConfig config, List<File> testDataFiles) {
         Set<String> filenames = Sets.newHashSet(Lists.transform(testDataFiles, f -> f.getName()));
         Set<String> filenamesNoExt = Sets.newHashSet();
         for (String filename : filenames) {
@@ -94,7 +95,7 @@ public final class BatchWithSubtasksGradingConfigAdapter extends SingleSourceFil
 
                 tokilibFiles.add(new TokilibFile(name, batchNo, tcNo));
             } catch (NumberFormatException e) {
-
+                // just skip it
             }
         }
 
@@ -131,12 +132,18 @@ public final class BatchWithSubtasksGradingConfigAdapter extends SingleSourceFil
             testData.get(file.batchNo).getTestCases().add(testCase);
         }
 
+        BatchWithSubtasksGradingConfig castConfig = (BatchWithSubtasksGradingConfig) config;
+        List<Subtask> subtasks = castConfig.getSubtasks();
         List<Integer> subtaskPoints = Lists.newArrayList();
-        for (int i = 1; i <= maxBatchNo; i++) {
-            subtaskPoints.add(0);
+        for (int i = 0; i < maxBatchNo; i++) {
+            if (i < subtasks.size())
+                subtaskPoints.add(subtasks.get(i).getPoints());
+            else {
+                subtaskPoints.add(0);
+            }
         }
 
-        return new BatchWithSubtasksGradingConfig(2000, 65536, testData, subtaskPoints, null);
+        return new BatchWithSubtasksGradingConfig(castConfig.getTimeLimitInMilliseconds(), castConfig.getMemoryLimitInKilobytes(), testData, subtaskPoints, castConfig.getCustomScorer());
     }
 
     @Override
@@ -150,34 +157,5 @@ public final class BatchWithSubtasksGradingConfigAdapter extends SingleSourceFil
         Form<BatchWithSubtasksGradingConfigForm> castForm = (Form<BatchWithSubtasksGradingConfigForm>) form;
 
         return batchWithSubtasksGradingConfigView.render(castForm, problem, testDataFiles, helperFiles);
-    }
-}
-
-class TokilibFile implements Comparable<TokilibFile> {
-    public String filename;
-    public int batchNo;
-    public int tcNo;
-
-    public TokilibFile(String filename, int batchNo, int tcNo) {
-        this.filename = filename;
-        this.batchNo = batchNo;
-        this.tcNo = tcNo;
-    }
-
-    @Override
-    public int compareTo(TokilibFile o) {
-        if (!filename.equals(o.filename)) {
-            return filename.compareTo(o.filename);
-        }
-
-        if (batchNo != o.batchNo) {
-            return batchNo - o.batchNo;
-        }
-
-        if (tcNo != o.tcNo) {
-            return tcNo - o.tcNo;
-        }
-
-        return 0;
     }
 }
