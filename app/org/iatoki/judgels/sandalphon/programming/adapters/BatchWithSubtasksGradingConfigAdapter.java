@@ -3,7 +3,6 @@ package org.iatoki.judgels.sandalphon.programming.adapters;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.iatoki.judgels.gabriel.GradingConfig;
-import org.iatoki.judgels.gabriel.blackbox.Subtask;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.BatchWithSubtasksGradingConfig;
@@ -18,13 +17,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public final class BatchWithSubtasksGradingConfigAdapter extends SingleSourceFileWithSubtasksGradingConfigAdapter {
+public final class BatchWithSubtasksGradingConfigAdapter extends SingleSourceFileWithSubtasksBlackBoxGradingConfigAdapter {
 
     @Override
     public Form<?> createFormFromConfig(GradingConfig config) {
         BatchWithSubtasksGradingConfigForm form = new BatchWithSubtasksGradingConfigForm();
         BatchWithSubtasksGradingConfig castConfig = (BatchWithSubtasksGradingConfig) config;
-        fillSingleSourceFileWithSubtasksGradingConfigFormPartsFromConfig(form, castConfig);
+        fillSingleSourceFileWithSubtasksBlackBoxGradingConfigFormPartsFromConfig(form, castConfig);
 
         if (castConfig.getCustomScorer() == null) {
             form.customScorer = "(none)";
@@ -41,7 +40,7 @@ public final class BatchWithSubtasksGradingConfigAdapter extends SingleSourceFil
         Form<BatchWithSubtasksGradingConfigForm> castForm = (Form<BatchWithSubtasksGradingConfigForm>) form;
         BatchWithSubtasksGradingConfigForm formData = castForm.get();
 
-        List<Object> parts = createSingleSourceFileWithSubtasksGradingConfigPartsFromForm(formData);
+        List<Object> parts = createSingleSourceFileWithSubtasksBlackBoxGradingConfigPartsFromForm(formData);
 
         int timeLimit = (int) parts.get(0);
         int memoryLimit = (int) parts.get(1);
@@ -148,9 +147,9 @@ public final class BatchWithSubtasksGradingConfigAdapter extends SingleSourceFil
     @Override
     public Html renderUpdateGradingConfig(Form<?> form, Problem problem, List<File> testDataFiles, List<File> helperFiles) {
         @SuppressWarnings("unchecked")
-        Form<BatchWithSubtasksGradingConfigForm> batchForm = (Form<BatchWithSubtasksGradingConfigForm>) form;
+        Form<BatchWithSubtasksGradingConfigForm> castForm = (Form<BatchWithSubtasksGradingConfigForm>) form;
 
-        return batchWithSubtasksGradingConfigView.render(batchForm, problem, testDataFiles, helperFiles);
+        return batchWithSubtasksGradingConfigView.render(castForm, problem, testDataFiles, helperFiles);
     }
 }
 

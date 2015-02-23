@@ -10,7 +10,6 @@ import org.iatoki.judgels.sandalphon.programming.forms.configs.InteractiveWithSu
 import org.iatoki.judgels.sandalphon.programming.Problem;
 import org.iatoki.judgels.sandalphon.programming.views.html.configs.interactiveWithSubtasksGradingConfigView;
 import play.data.Form;
-import play.mvc.Http;
 import play.twirl.api.Html;
 
 import java.io.File;
@@ -18,13 +17,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public final class InteractiveWithSubtasksGradingConfigAdapter extends SingleSourceFileWithSubtasksGradingConfigAdapter {
+public final class InteractiveWithSubtasksGradingConfigAdapter extends SingleSourceFileWithSubtasksBlackBoxGradingConfigAdapter {
 
     @Override
     public Form<?> createFormFromConfig(GradingConfig config) {
         InteractiveWithSubtasksGradingConfigForm form = new InteractiveWithSubtasksGradingConfigForm();
         InteractiveWithSubtasksGradingConfig castConfig = (InteractiveWithSubtasksGradingConfig) config;
-        fillSingleSourceFileWithSubtasksGradingConfigFormPartsFromConfig(form, castConfig);
+        fillSingleSourceFileWithSubtasksBlackBoxGradingConfigFormPartsFromConfig(form, castConfig);
 
         if (castConfig.getCommunicator() == null) {
             form.communicator = "(none)";
@@ -41,7 +40,7 @@ public final class InteractiveWithSubtasksGradingConfigAdapter extends SingleSou
         Form<InteractiveWithSubtasksGradingConfigForm> castForm = (Form<InteractiveWithSubtasksGradingConfigForm>) form;
         InteractiveWithSubtasksGradingConfigForm formData = castForm.get();
 
-        List<Object> parts = createSingleSourceFileWithSubtasksGradingConfigPartsFromForm(formData);
+        List<Object> parts = createSingleSourceFileWithSubtasksBlackBoxGradingConfigPartsFromForm(formData);
 
         int timeLimit = (int) parts.get(0);
         int memoryLimit = (int) parts.get(1);

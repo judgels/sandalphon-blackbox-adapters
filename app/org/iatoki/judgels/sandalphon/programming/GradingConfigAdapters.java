@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.programming;
 
+import org.iatoki.judgels.sandalphon.programming.adapters.BatchGradingConfigAdapter;
 import org.iatoki.judgels.sandalphon.programming.adapters.BatchWithSubtasksGradingConfigAdapter;
 import org.iatoki.judgels.sandalphon.programming.adapters.InteractiveWithSubtasksGradingConfigAdapter;
 
@@ -10,6 +11,8 @@ public final class GradingConfigAdapters {
 
     public static GradingConfigAdapter fromGradingType(String gradingType) {
         switch (gradingType) {
+            case "Batch":
+                return new BatchGradingConfigAdapter();
             case "BatchWithSubtasks":
                 return new BatchWithSubtasksGradingConfigAdapter();
             case "InteractiveWithSubtasks":

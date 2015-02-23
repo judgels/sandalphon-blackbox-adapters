@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public abstract class SingleSourceFileWithSubtasksGradingConfigAdapter extends SingleSourceFileBlackBoxGradingConfigAdapter {
-    protected final void fillSingleSourceFileWithSubtasksGradingConfigFormPartsFromConfig(SingleSourceFileWithSubtasksBlackBoxGradingConfigForm form, SingleSourceFileWithSubtasksBlackBoxGradingConfig config) {
+public abstract class SingleSourceFileWithSubtasksBlackBoxGradingConfigAdapter extends SingleSourceFileBlackBoxGradingConfigAdapter {
+    protected final void fillSingleSourceFileWithSubtasksBlackBoxGradingConfigFormPartsFromConfig(SingleSourceFileWithSubtasksBlackBoxGradingConfigForm form, SingleSourceFileWithSubtasksBlackBoxGradingConfig config) {
         fillSingleSourceFileBlackBoxGradingConfigFormPartsFromConfig(form, config);
 
         int subtasksCount = Math.max(10, config.getSubtasks().size());
@@ -50,7 +50,7 @@ public abstract class SingleSourceFileWithSubtasksGradingConfigAdapter extends S
         form.subtaskPoints = subtaskPoints;
     }
 
-    protected final List<Object> createSingleSourceFileWithSubtasksGradingConfigPartsFromForm(SingleSourceFileWithSubtasksBlackBoxGradingConfigForm form) {
+    protected final List<Object> createSingleSourceFileWithSubtasksBlackBoxGradingConfigPartsFromForm(SingleSourceFileWithSubtasksBlackBoxGradingConfigForm form) {
         List<Object> parts = createSingleSourceFileBlackBoxGradingConfigPartsFromForm(form);
 
         int timeLimit = (int) parts.get(0);
