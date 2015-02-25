@@ -3,7 +3,6 @@ package org.iatoki.judgels.gabriel.commons;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
-import org.iatoki.judgels.commons.AbstractJidCacheService;
 import org.iatoki.judgels.gabriel.commons.views.html.blackBoxViewSubmissionView;
 import org.iatoki.judgels.gabriel.commons.views.html.blackBoxViewStatementView;
 import org.iatoki.judgels.gabriel.GradingConfig;
@@ -21,15 +20,14 @@ import play.twirl.api.Html;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 import java.util.Map;
 
 public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
 
     @Override
-    public Html renderViewStatement(String postSubmitUri, String name, String statement, GradingConfig config, String engine, Date gradingLastUpdateTime) {
+    public Html renderViewStatement(String postSubmitUri, String name, String statement, GradingConfig config, String engine) {
         BlackBoxGradingConfig blackBoxConfig = (BlackBoxGradingConfig) config;
-        return blackBoxViewStatementView.render(postSubmitUri, name, statement, blackBoxConfig, engine, gradingLastUpdateTime.getTime());
+        return blackBoxViewStatementView.render(postSubmitUri, name, statement, blackBoxConfig, engine);
     }
 
     @Override
@@ -107,8 +105,8 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
     }
 
     @Override
-    public GradingRequest createGradingRequest(String gradingJid, String problemJid, Date gradingLastUpdateTime, String gradingEngine, String gradingLanguage, GradingSource gradingSource) {
-        return new BlackBoxGradingRequest(gradingJid, problemJid, gradingLastUpdateTime.getTime(), gradingEngine, gradingLanguage, (BlackBoxGradingSource) gradingSource);
+    public GradingRequest createGradingRequest(String gradingJid, String problemJid, String gradingEngine, String gradingLanguage, GradingSource gradingSource) {
+        return new BlackBoxGradingRequest(gradingJid, problemJid, gradingEngine, gradingLanguage, (BlackBoxGradingSource) gradingSource);
     }
 
     @Override

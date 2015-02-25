@@ -1,4 +1,4 @@
-@(postSubmitUri: String, name: String, statement: String, config: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig, engine: String, gradingLastUpdateTime: Long)
+@(postSubmitUri: String, name: String, statement: String, config: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig, engine: String)
 
 @import play.i18n.Messages
 @import org.iatoki.judgels.gabriel.GradingLanguageRegistry
@@ -25,7 +25,6 @@
 @b3.form(play.api.mvc.Call("POST", postSubmitUri), 'enctype->"multipart/form-data") {
 
     @b3.hidden("engine", engine)
-    @b3.hidden("gradingLastUpdateTime", gradingLastUpdateTime)
     @b3.hidden("sourceFileFieldKeys", Joiner.on(",").join(config.getSourceFileFields.keySet))
 
     @for((k, v) <- config.getSourceFileFields) {

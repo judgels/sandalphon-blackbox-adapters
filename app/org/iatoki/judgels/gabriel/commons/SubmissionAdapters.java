@@ -7,6 +7,7 @@ public final class SubmissionAdapters {
 
     public static SubmissionAdapter fromGradingEngine(String engine) {
         switch (engine) {
+            case "Batch":
             case "BatchWithSubtasks":
             case "InteractiveWithSubtasks":
                 return new BlackBoxSubmissionAdapter();

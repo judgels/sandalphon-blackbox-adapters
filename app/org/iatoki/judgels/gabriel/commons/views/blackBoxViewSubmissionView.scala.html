@@ -134,7 +134,7 @@
     @for(i <- 1 until details.getTestDataResults.size()) {
         <div class="panel panel-default">
             @if(details.getTestDataResults.get(i).getId != -1) {
-                <div class="panel-heading">Test Group @i</div>
+                <div class="panel-heading">Test Group @details.getTestDataResults.get(i).getId</div>
             }
         <div class="panel-body">
             <table class="table table-condensed">
