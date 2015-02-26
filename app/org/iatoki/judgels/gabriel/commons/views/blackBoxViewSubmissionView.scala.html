@@ -30,13 +30,13 @@
                     <td>Language</td><td>@gradingLanguageName</td>
                 </tr>
                 <tr>
-                    <td>Time</td><td>@JudgelsUtils.formatDate(submission.getTime)</td>
-                </tr>
-                <tr>
                     <td>Verdict</td><td>@submission.getLatestVerdict.getName</td>
                 </tr>
                 <tr>
                     <td>Score</td><td>@submission.getLatestScore</td>
+                </tr>
+                <tr>
+                    <td>Time</td><td>@JudgelsUtils.formatDate(submission.getTime)</td>
                 </tr>
             </tbody>
         </table>
