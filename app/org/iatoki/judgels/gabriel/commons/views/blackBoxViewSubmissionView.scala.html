@@ -107,8 +107,20 @@
                             }</td>
                             <td>@testCaseResult.getVerdict.getName</td>
                             <td>@testCaseResult.getScore</td>
-                            <td>@testCaseResult.getExecutionResult.getTimeInMilliseconds ms</td>
-                            <td>@testCaseResult.getExecutionResult.getMemoryInKilobytes KB</td>
+                            <td>
+                                @if(testCaseResult.getExecutionResult == null) {
+                                    ?
+                                }else{
+                                    @testCaseResult.getExecutionResult.getTimeInMilliseconds ms
+                                }
+                            </td>
+                            <td>
+                                @if(testCaseResult.getExecutionResult == null) {
+                                    ?
+                                }else{
+                                    @testCaseResult.getExecutionResult.getMemoryInKilobytes KB
+                                }
+                            </td>
                             @if(!details.getSubtaskResults.isEmpty && details.getSubtaskResults.get(0).getId != -1) {
                                 <td>@for(id <- testCaseResult.getSubtaskIds) {
                                     <span class="badge">@id</span>
@@ -160,8 +172,20 @@
                             }</td>
                             <td>@testCaseResult.getVerdict.getName</td>
                             <td>@testCaseResult.getScore</td>
-                            <td>@testCaseResult.getExecutionResult.getTimeInMilliseconds ms</td>
-                            <td>@testCaseResult.getExecutionResult.getMemoryInKilobytes KB</td>
+                            <td>
+                                @if(testCaseResult.getExecutionResult == null) {
+                                    ?
+                                }else{
+                                    @testCaseResult.getExecutionResult.getTimeInMilliseconds ms
+                                }
+                            </td>
+                            <td>
+                                @if(testCaseResult.getExecutionResult == null) {
+                                    ?
+                                }else{
+                                    @testCaseResult.getExecutionResult.getMemoryInKilobytes KB
+                                }
+                            </td>
                             @if(!details.getSubtaskResults.isEmpty && details.getSubtaskResults.get(0).getId != -1) {
                                 <td>@for(id <- testCaseResult.getSubtaskIds) {
                                     <span class="badge">@id</span>
