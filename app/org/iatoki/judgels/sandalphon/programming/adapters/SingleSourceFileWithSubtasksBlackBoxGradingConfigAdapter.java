@@ -84,6 +84,8 @@ public abstract class SingleSourceFileWithSubtasksBlackBoxGradingConfigAdapter e
                             .filter(s -> s != null)
                             .collect(Collectors.toSet());
 
+                    subtaskIds.add(0);
+
                     sampleTestCases.add(new TestCase(sampleTestCase.getInput(), sampleTestCase.getOutput(), subtaskIds));
 
                     if (!subtaskIds.isEmpty()) {
