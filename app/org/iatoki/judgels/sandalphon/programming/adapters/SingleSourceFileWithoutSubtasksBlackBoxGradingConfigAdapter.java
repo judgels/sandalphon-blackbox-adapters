@@ -39,7 +39,7 @@ public abstract class SingleSourceFileWithoutSubtasksBlackBoxGradingConfigAdapte
 
                 filledTestData.add(new TestGroup(0, sampleTestCases.build()));
             } else {
-                filledTestData.add(new TestGroup(i, Lists.transform(testData.get(i).getTestCases(), tc -> new TestCase(tc.getInput(), tc.getOutput(), ImmutableSet.of(-1)))));
+                filledTestData.add(new TestGroup(-1, Lists.transform(testData.get(i).getTestCases(), tc -> new TestCase(tc.getInput(), tc.getOutput(), ImmutableSet.of(-1)))));
             }
         }
 
