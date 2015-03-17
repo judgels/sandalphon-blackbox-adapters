@@ -21,13 +21,14 @@ import play.twirl.api.Html;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 
 public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
 
     @Override
-    public Html renderViewStatement(String postSubmitUri, String name, String statement, GradingConfig config, String engine) {
+    public Html renderViewStatement(String postSubmitUri, String name, String statement, GradingConfig config, String engine, Set<String> allowedLanguageNames) {
         BlackBoxGradingConfig blackBoxConfig = (BlackBoxGradingConfig) config;
-        return blackBoxViewStatementView.render(postSubmitUri, name, statement, blackBoxConfig, engine);
+        return blackBoxViewStatementView.render(postSubmitUri, name, statement, blackBoxConfig, engine, allowedLanguageNames);
     }
 
     @Override

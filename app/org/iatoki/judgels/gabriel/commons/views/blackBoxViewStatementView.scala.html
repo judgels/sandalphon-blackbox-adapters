@@ -1,4 +1,4 @@
-@(postSubmitUri: String, name: String, statement: String, config: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig, engine: String)
+@(postSubmitUri: String, name: String, statement: String, config: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig, engine: String, allowedLanguageNames: Set[String])
 
 @import play.i18n.Messages
 @import org.iatoki.judgels.gabriel.GradingLanguageRegistry
@@ -43,7 +43,9 @@
         <div class="col-sm-10">
             <select name="language">
                 @for((k, v) <- GradingLanguageRegistry.getInstance().getGradingLanguages) {
-                    <option value="@k">@v</option>
+                    @if(allowedLanguageNames.contains(k)) {
+                        <option value="@k">@v</option>
+                    }
                 }
             </select>
         </div>
