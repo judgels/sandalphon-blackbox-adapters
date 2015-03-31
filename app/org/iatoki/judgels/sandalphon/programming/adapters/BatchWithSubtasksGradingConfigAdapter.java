@@ -7,9 +7,9 @@ import org.iatoki.judgels.gabriel.blackbox.Subtask;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.BatchWithSubtasksGradingConfig;
-import org.iatoki.judgels.sandalphon.programming.forms.configs.BatchWithSubtasksGradingConfigForm;
-import org.iatoki.judgels.sandalphon.programming.Problem;
-import org.iatoki.judgels.sandalphon.programming.views.html.configs.batchWithSubtasksGradingConfigView;
+import org.iatoki.judgels.sandalphon.commons.programming.ProgrammingProblem;
+import org.iatoki.judgels.sandalphon.forms.programming.configs.BatchWithSubtasksGradingConfigForm;
+import org.iatoki.judgels.sandalphon.views.html.programming.configs.batchWithSubtasksGradingConfigView;
 import play.data.Form;
 import play.twirl.api.Html;
 
@@ -152,7 +152,7 @@ public final class BatchWithSubtasksGradingConfigAdapter extends SingleSourceFil
     }
 
     @Override
-    public Html renderUpdateGradingConfig(Form<?> form, Problem problem, List<File> testDataFiles, List<File> helperFiles) {
+    public Html renderUpdateGradingConfig(Form<?> form, ProgrammingProblem problem, List<File> testDataFiles, List<File> helperFiles) {
         @SuppressWarnings("unchecked")
         Form<BatchWithSubtasksGradingConfigForm> castForm = (Form<BatchWithSubtasksGradingConfigForm>) form;
 

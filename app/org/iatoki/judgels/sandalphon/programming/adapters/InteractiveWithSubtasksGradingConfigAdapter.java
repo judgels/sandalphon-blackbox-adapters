@@ -6,9 +6,9 @@ import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.InteractiveWithSubtasksGradingConfig;
-import org.iatoki.judgels.sandalphon.programming.forms.configs.InteractiveWithSubtasksGradingConfigForm;
-import org.iatoki.judgels.sandalphon.programming.Problem;
-import org.iatoki.judgels.sandalphon.programming.views.html.configs.interactiveWithSubtasksGradingConfigView;
+import org.iatoki.judgels.sandalphon.commons.programming.ProgrammingProblem;
+import org.iatoki.judgels.sandalphon.forms.programming.configs.InteractiveWithSubtasksGradingConfigForm;
+import org.iatoki.judgels.sandalphon.views.html.programming.configs.interactiveWithSubtasksGradingConfigView;
 import play.data.Form;
 import play.twirl.api.Html;
 
@@ -147,7 +147,7 @@ public final class InteractiveWithSubtasksGradingConfigAdapter extends SingleSou
     }
 
     @Override
-    public Html renderUpdateGradingConfig(Form<?> form, Problem problem, List<File> testDataFiles, List<File> helperFiles) {
+    public Html renderUpdateGradingConfig(Form<?> form, ProgrammingProblem problem, List<File> testDataFiles, List<File> helperFiles) {
         @SuppressWarnings("unchecked")
         Form<InteractiveWithSubtasksGradingConfigForm> interactiveForm = (Form<InteractiveWithSubtasksGradingConfigForm>) form;
 
