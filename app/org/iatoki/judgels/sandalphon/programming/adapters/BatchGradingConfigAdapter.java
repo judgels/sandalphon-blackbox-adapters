@@ -7,7 +7,7 @@ import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.BatchGradingConfig;
-import org.iatoki.judgels.sandalphon.commons.programming.ProgrammingProblem;
+import org.iatoki.judgels.sandalphon.commons.Problem;
 import org.iatoki.judgels.sandalphon.forms.programming.configs.BatchGradingConfigForm;
 import org.iatoki.judgels.sandalphon.views.html.programming.configs.batchGradingConfigView;
 import play.data.Form;
@@ -81,7 +81,7 @@ public final class BatchGradingConfigAdapter extends SingleSourceFileWithoutSubt
     }
 
     @Override
-    public Html renderUpdateGradingConfig(Form<?> form, ProgrammingProblem problem, List<File> testDataFiles, List<File> helperFiles) {
+    public Html renderUpdateGradingConfig(Form<?> form, Problem problem, List<File> testDataFiles, List<File> helperFiles) {
         @SuppressWarnings("unchecked")
         Form<BatchGradingConfigForm> castForm = (Form<BatchGradingConfigForm>) form;
 
