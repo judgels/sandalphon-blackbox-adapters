@@ -2,18 +2,18 @@ package org.iatoki.judgels.sandalphon.programming.adapters;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import org.iatoki.judgels.commons.FileInfo;
 import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.Subtask;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.BatchWithSubtasksGradingConfig;
-import org.iatoki.judgels.sandalphon.commons.Problem;
+import org.iatoki.judgels.sandalphon.Problem;
 import org.iatoki.judgels.sandalphon.forms.programming.configs.BatchWithSubtasksGradingConfigForm;
 import org.iatoki.judgels.sandalphon.views.html.programming.configs.batchWithSubtasksGradingConfigView;
 import play.data.Form;
 import play.twirl.api.Html;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -63,7 +63,7 @@ public final class BatchWithSubtasksGradingConfigAdapter extends SingleSourceFil
     }
 
     @Override
-    public GradingConfig updateConfigWithTokilibFormat(GradingConfig config, List<File> testDataFiles) {
+    public GradingConfig updateConfigWithTokilibFormat(GradingConfig config, List<FileInfo> testDataFiles) {
         Set<String> filenames = Sets.newHashSet(Lists.transform(testDataFiles, f -> f.getName()));
         Set<String> filenamesNoExt = Sets.newHashSet();
         for (String filename : filenames) {
@@ -152,7 +152,7 @@ public final class BatchWithSubtasksGradingConfigAdapter extends SingleSourceFil
     }
 
     @Override
-    public Html renderUpdateGradingConfig(Form<?> form, Problem problem, List<File> testDataFiles, List<File> helperFiles) {
+    public Html renderUpdateGradingConfig(Form<?> form, Problem problem, List<FileInfo> testDataFiles, List<FileInfo> helperFiles) {
         @SuppressWarnings("unchecked")
         Form<BatchWithSubtasksGradingConfigForm> castForm = (Form<BatchWithSubtasksGradingConfigForm>) form;
 

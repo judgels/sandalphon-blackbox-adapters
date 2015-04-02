@@ -3,11 +3,12 @@ package org.iatoki.judgels.sandalphon.programming.adapters;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.io.FilenameUtils;
+import org.iatoki.judgels.commons.FileInfo;
 import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.BatchGradingConfig;
-import org.iatoki.judgels.sandalphon.commons.Problem;
+import org.iatoki.judgels.sandalphon.Problem;
 import org.iatoki.judgels.sandalphon.forms.programming.configs.BatchGradingConfigForm;
 import org.iatoki.judgels.sandalphon.views.html.programming.configs.batchGradingConfigView;
 import play.data.Form;
@@ -62,7 +63,7 @@ public final class BatchGradingConfigAdapter extends SingleSourceFileWithoutSubt
     }
 
     @Override
-    public GradingConfig updateConfigWithAutoPopulation(GradingConfig config, List<File> testDataFiles) {
+    public GradingConfig updateConfigWithAutoPopulation(GradingConfig config, List<FileInfo> testDataFiles) {
         ImmutableList.Builder<TestCase> testCases = ImmutableList.builder();
 
         for (int i = 0; i + 1 < testDataFiles.size(); i++) {
@@ -81,7 +82,7 @@ public final class BatchGradingConfigAdapter extends SingleSourceFileWithoutSubt
     }
 
     @Override
-    public Html renderUpdateGradingConfig(Form<?> form, Problem problem, List<File> testDataFiles, List<File> helperFiles) {
+    public Html renderUpdateGradingConfig(Form<?> form, Problem problem, List<FileInfo> testDataFiles, List<FileInfo> helperFiles) {
         @SuppressWarnings("unchecked")
         Form<BatchGradingConfigForm> castForm = (Form<BatchGradingConfigForm>) form;
 
