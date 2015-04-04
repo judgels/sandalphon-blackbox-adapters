@@ -15,20 +15,27 @@ import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingRequest;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingSource;
 import org.iatoki.judgels.gabriel.blackbox.SourceFile;
+import org.iatoki.judgels.sandalphon.commons.views.html.statementLanguageSelectionLayout;
 import play.mvc.Http;
 import play.twirl.api.Html;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
 
     @Override
-    public Html renderViewStatement(String postSubmitUri, String name, String statement, GradingConfig config, String engine, Set<String> allowedLanguageNames) {
+    public Html renderViewStatement(String postSubmitUri, String name, String statement, GradingConfig config, String engine, Set<String> allowedGradingLanguageNames) {
         BlackBoxGradingConfig blackBoxConfig = (BlackBoxGradingConfig) config;
-        return blackBoxViewStatementView.render(postSubmitUri, name, statement, blackBoxConfig, engine, allowedLanguageNames);
+        return blackBoxViewStatementView.render(postSubmitUri, name, statement, blackBoxConfig, engine, allowedGradingLanguageNames);
+    }
+
+    @Override
+    public Html renderStatementLanguageSelection(String switchLanguageUri, List<String> allowedStatementLanguages, String currentStatementLanguage, Html statement) {
+        return statementLanguageSelectionLayout.render(switchLanguageUri, allowedStatementLanguages, currentStatementLanguage, statement);
     }
 
     @Override
