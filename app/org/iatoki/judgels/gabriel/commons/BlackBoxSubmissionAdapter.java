@@ -21,7 +21,6 @@ import play.twirl.api.Html;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,7 +33,7 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
     }
 
     @Override
-    public Html renderStatementLanguageSelection(String switchLanguageUri, List<String> allowedStatementLanguages, String currentStatementLanguage, Html statement) {
+    public Html renderStatementLanguageSelection(String switchLanguageUri, Set<String> allowedStatementLanguages, String currentStatementLanguage, Html statement) {
         return statementLanguageSelectionLayout.render(switchLanguageUri, allowedStatementLanguages, currentStatementLanguage, statement);
     }
 
