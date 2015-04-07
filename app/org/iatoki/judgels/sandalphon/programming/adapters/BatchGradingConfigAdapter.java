@@ -10,11 +10,10 @@ import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.BatchGradingConfig;
 import org.iatoki.judgels.sandalphon.Problem;
 import org.iatoki.judgels.sandalphon.forms.programming.configs.BatchGradingConfigForm;
-import org.iatoki.judgels.sandalphon.views.html.programming.configs.batchGradingConfigView;
+import org.iatoki.judgels.sandalphon.views.html.programming.grading.batchGradingConfigView;
 import play.data.Form;
 import play.twirl.api.Html;
 
-import java.io.File;
 import java.util.List;
 
 public final class BatchGradingConfigAdapter extends SingleSourceFileWithoutSubtasksBlackBoxGradingConfigAdapter implements ConfigurableWithAutoPopulation {
