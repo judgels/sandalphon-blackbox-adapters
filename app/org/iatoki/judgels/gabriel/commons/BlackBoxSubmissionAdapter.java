@@ -27,9 +27,9 @@ import java.util.Set;
 public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
 
     @Override
-    public Html renderViewStatement(String postSubmitUri, String name, String statement, GradingConfig config, String engine, Set<String> allowedGradingLanguageNames) {
+    public Html renderViewStatement(String postSubmitUri, String name, String statement, GradingConfig config, String engine, Set<String> allowedGradingLanguageNames, boolean isAllowedToSubmit) {
         BlackBoxGradingConfig blackBoxConfig = (BlackBoxGradingConfig) config;
-        return blackBoxViewStatementView.render(postSubmitUri, name, statement, blackBoxConfig, engine, allowedGradingLanguageNames);
+        return blackBoxViewStatementView.render(postSubmitUri, name, statement, blackBoxConfig, engine, allowedGradingLanguageNames, isAllowedToSubmit);
     }
 
     @Override
