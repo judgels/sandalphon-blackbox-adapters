@@ -1,4 +1,4 @@
-@(postSubmitUri: String, name: String, statement: String, config: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig, engine: String, allowedGradingLanguageNames: Set[String], isAllowedToSubmit: Boolean)
+@(postSubmitUri: String, name: String, statement: String, config: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig, engine: String, allowedGradingLanguageNames: Set[String], reasonNotAllowedToSubmit: String)
 
 @import play.i18n.Messages
 @import org.iatoki.judgels.gabriel.GradingLanguageRegistry
@@ -24,11 +24,9 @@
 
 @implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-2", "col-md-10") }
 
-@if(play.mvc.Controller.flash("submissionInfo") != null) {
-    <div class="alert alert-danger" role="alert">@{play.mvc.Controller.flash("submissionInfo")}</div>
-}
-
-@if(isAllowedToSubmit) {
+@if(reasonNotAllowedToSubmit != null) {
+    <div class="alert alert-danger" role="alert">@{reasonNotAllowedToSubmit}</div>
+}else {
     @b3.form(play.api.mvc.Call("POST", postSubmitUri), 'enctype->"multipart/form-data") {
 
         @b3.hidden("engine", engine)
