@@ -26,6 +26,8 @@ import java.util.Set;
 
 public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
 
+    private static final long MAX_SUBMISSION_FILE_LENGTH = 300 * 1024; // 300 KB
+
     @Override
     public Html renderViewStatement(String postSubmitUri, String name, String statement, GradingConfig config, String engine, Set<String> allowedGradingLanguageNames, String reasonNotAllowedToSubmit) {
         BlackBoxGradingConfig blackBoxConfig = (BlackBoxGradingConfig) config;
@@ -63,6 +65,10 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
             Http.MultipartFormData.FilePart file = body.getFile(fieldKey);
             if (file == null) {
                 throw new SubmissionException("You must submit a source file for '" + fieldKey + "'");
+            }
+
+            if (file.getFile().length() > MAX_SUBMISSION_FILE_LENGTH) {
+                throw new SubmissionException("Source file must not exceed 300KB");
             }
 
             try {
