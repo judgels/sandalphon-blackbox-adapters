@@ -21,8 +21,11 @@ import play.twirl.api.Html;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
 
@@ -46,45 +49,63 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
     }
 
     @Override
-    public GradingSource createGradingSourceFromNewSubmission(Http.MultipartFormData body) {
-
-        String gradingLanguage = body.asFormUrlEncoded().get("language")[0];
+    public GradingSource createGradingSourceFromNewSubmission(Http.MultipartFormData body) throws SubmissionException {
+        String language = body.asFormUrlEncoded().get("language")[0];
         String sourceFileFieldKeysUnparsed = body.asFormUrlEncoded().get("sourceFileFieldKeys")[0];
 
-        if (gradingLanguage == null || sourceFileFieldKeysUnparsed == null) {
+        if (language == null || sourceFileFieldKeysUnparsed == null) {
             return new BlackBoxGradingSource(ImmutableMap.of());
         }
 
-        GradingLanguage language = GradingLanguageRegistry.getInstance().getLanguage(gradingLanguage);
+        List<String> sourceFileFieldKeys = Arrays.asList(sourceFileFieldKeysUnparsed.split(","));
 
-        String[] sourceFileFieldKeys = sourceFileFieldKeysUnparsed.split(",");
-        ImmutableMap.Builder<String, SourceFile> sourceFiles = ImmutableMap.builder();
+        List<Http.MultipartFormData.FilePart> fileParts = body.getFiles();
+        Map<String, String> formFilenames = fileParts.stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getFilename()));
+        Map<String, File> files = fileParts.stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getFile()));
 
-        for (String fieldKey : sourceFileFieldKeys) {
+        ImmutableMap.Builder<String, String> formFileContents = ImmutableMap.builder();
 
-            Http.MultipartFormData.FilePart file = body.getFile(fieldKey);
-            if (file == null) {
-                throw new SubmissionException("You must submit a source file for '" + fieldKey + "'");
-            }
+        for (Map.Entry<String, File> entry : files.entrySet()) {
+            String key = entry.getKey();
+            File file = entry.getValue();
 
-            if (file.getFile().length() > MAX_SUBMISSION_FILE_LENGTH) {
+            if (file.length() > MAX_SUBMISSION_FILE_LENGTH) {
                 throw new SubmissionException("Source file must not exceed 300KB");
             }
 
+            String content;
             try {
-                String filename = file.getFilename();
-                String content = FileUtils.readFileToString(file.getFile());
-
-                String verification = language.verifyFile(filename, content);
-
-                if (verification != null) {
-                    throw new SubmissionException(verification);
-                }
-
-                sourceFiles.put(file.getKey(), new SourceFile(file.getFilename(), content));
+                content = FileUtils.readFileToString(file);
             } catch (IOException e) {
                 throw new SubmissionException(e.getMessage());
             }
+
+            formFileContents.put(key, content);
+        }
+
+        return createBlackBoxGradingSourceFromNewSubmission(language, sourceFileFieldKeys, formFilenames, formFileContents.build());
+    }
+
+    public GradingSource createBlackBoxGradingSourceFromNewSubmission(String language, List<String> sourceFileFieldKeys, Map<String, String> formFilenames, Map<String, String> formFileContents) throws SubmissionException {
+        GradingLanguage gradingLanguage = GradingLanguageRegistry.getInstance().getLanguage(language);
+
+        ImmutableMap.Builder<String, SourceFile> sourceFiles = ImmutableMap.builder();
+
+        for (String fieldKey : sourceFileFieldKeys) {
+            if (!formFilenames.containsKey(fieldKey)) {
+                throw new SubmissionException("You must submit a source file for '" + fieldKey + "'");
+            }
+
+            String filename = formFilenames.get(fieldKey);
+            String fileContent = formFileContents.get(fieldKey);
+
+            String verification = gradingLanguage.verifyFile(filename, fileContent);
+
+            if (verification != null) {
+                throw new SubmissionException(verification);
+            }
+
+            sourceFiles.put(fieldKey, new SourceFile(filename, fileContent));
         }
 
         return new BlackBoxGradingSource(sourceFiles.build());
