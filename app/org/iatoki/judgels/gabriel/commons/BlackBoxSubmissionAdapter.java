@@ -1,8 +1,11 @@
 package org.iatoki.judgels.gabriel.commons;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
+import org.iatoki.judgels.commons.FileInfo;
+import org.iatoki.judgels.commons.FileSystemProvider;
 import org.iatoki.judgels.gabriel.commons.views.html.blackBoxViewSubmissionView;
 import org.iatoki.judgels.gabriel.commons.views.html.blackBoxViewStatementView;
 import org.iatoki.judgels.gabriel.GradingConfig;
@@ -112,25 +115,23 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
     }
 
     @Override
-    public GradingSource createGradingSourceFromPastSubmission(File submissionBaseDir, String submissionJid) {
-        File submissionDir = new File(submissionBaseDir, submissionJid);
-
+    public GradingSource createGradingSourceFromPastSubmission(FileSystemProvider fileSystemProvider, String submissionJid) {
         ImmutableMap.Builder<String, SourceFile> sourceFiles = ImmutableMap.builder();
 
-        for (File fieldKey : submissionDir.listFiles()) {
+        for (FileInfo fieldKey : fileSystemProvider.listDirectoriesInDirectory(ImmutableList.of(submissionJid))) {
+            List<FileInfo> sourceFilesInDir = fileSystemProvider.listFilesInDirectory(ImmutableList.of(submissionJid, fieldKey.getName()));
 
-            File[] sourceFilesInDir = fieldKey.listFiles();
-            if (sourceFilesInDir == null) {
-                continue;
+            if (sourceFilesInDir.isEmpty()) {
+                throw new RuntimeException("Cannot find source files for key " + fieldKey.getName() + " for submission " + submissionJid);
             }
 
-            File sourceFile = sourceFilesInDir[0];
+            FileInfo sourceFile = sourceFilesInDir.get(0);
 
             try {
                 String name = sourceFile.getName();
-                String content = FileUtils.readFileToString(sourceFile);
+                String content = fileSystemProvider.readFromFile(ImmutableList.of(submissionJid, fieldKey.getName(), name));
                 sourceFiles.put(fieldKey.getName(), new SourceFile(name, content));
-            } catch (NullPointerException | IOException e) {
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -144,17 +145,14 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
     }
 
     @Override
-    public void storeSubmissionFiles(File submissionBaseDir, String submissionJid, GradingSource source) {
-        File submissionDir = new File(submissionBaseDir, submissionJid);
-
+    public void storeSubmissionFiles(FileSystemProvider fileSystemProvider, String submissionJid, GradingSource source) {
         try {
-            FileUtils.forceMkdir(submissionDir);
+            fileSystemProvider.createDirectory(ImmutableList.of(submissionJid));
 
             for (Map.Entry<String, SourceFile> entry : ((BlackBoxGradingSource) source).getSourceFiles().entrySet()) {
-                File sourceFileDir = new File(submissionDir, entry.getKey());
-                FileUtils.forceMkdir(sourceFileDir);
-                File sourceFile = new File(sourceFileDir, entry.getValue().getName());
-                FileUtils.writeStringToFile(sourceFile, entry.getValue().getContent());
+                String fieldKey = entry.getKey();
+                SourceFile sourceFile = entry.getValue();
+                fileSystemProvider.writeToFile(ImmutableList.of(submissionJid, fieldKey, sourceFile.getName()), sourceFile.getContent());
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
