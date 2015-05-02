@@ -2,6 +2,7 @@ package org.iatoki.judgels.gabriel.commons;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.commons.FileInfo;
@@ -115,8 +116,16 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
     }
 
     @Override
-    public GradingSource createGradingSourceFromPastSubmission(FileSystemProvider fileSystemProvider, String submissionJid) {
+    public GradingSource createGradingSourceFromPastSubmission(FileSystemProvider localFileSystemProvider, FileSystemProvider remoteFileSystemProvider, String submissionJid) {
         ImmutableMap.Builder<String, SourceFile> sourceFiles = ImmutableMap.builder();
+
+        FileSystemProvider fileSystemProvider;
+
+        if (localFileSystemProvider.directoryExists(ImmutableList.of(submissionJid))) {
+            fileSystemProvider = localFileSystemProvider;
+        } else {
+            fileSystemProvider = remoteFileSystemProvider;
+        }
 
         for (FileInfo fieldKey : fileSystemProvider.listDirectoriesInDirectory(ImmutableList.of(submissionJid))) {
             List<FileInfo> sourceFilesInDir = fileSystemProvider.listFilesInDirectory(ImmutableList.of(submissionJid, fieldKey.getName()));
@@ -145,17 +154,25 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
     }
 
     @Override
-    public void storeSubmissionFiles(FileSystemProvider fileSystemProvider, String submissionJid, GradingSource source) {
-        try {
-            fileSystemProvider.createDirectory(ImmutableList.of(submissionJid));
+    public void storeSubmissionFiles(FileSystemProvider localFileSystemProvider, FileSystemProvider remoteFileSystemProvider, String submissionJid, GradingSource source) {
 
-            for (Map.Entry<String, SourceFile> entry : ((BlackBoxGradingSource) source).getSourceFiles().entrySet()) {
-                String fieldKey = entry.getKey();
-                SourceFile sourceFile = entry.getValue();
-                fileSystemProvider.writeToFile(ImmutableList.of(submissionJid, fieldKey, sourceFile.getName()), sourceFile.getContent());
+        List<FileSystemProvider> fileSystemProviders = Lists.newArrayList(localFileSystemProvider);
+        if (remoteFileSystemProvider != null) {
+            fileSystemProviders.add(remoteFileSystemProvider);
+        }
+
+        for (FileSystemProvider fileSystemProvider : fileSystemProviders) {
+            try {
+                fileSystemProvider.createDirectory(ImmutableList.of(submissionJid));
+
+                for (Map.Entry<String, SourceFile> entry : ((BlackBoxGradingSource) source).getSourceFiles().entrySet()) {
+                    String fieldKey = entry.getKey();
+                    SourceFile sourceFile = entry.getValue();
+                    fileSystemProvider.writeToFile(ImmutableList.of(submissionJid, fieldKey, sourceFile.getName()), sourceFile.getContent());
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 }
