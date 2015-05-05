@@ -9,6 +9,7 @@ public final class SubmissionAdapters {
         switch (engine) {
             case "Batch":
             case "BatchWithSubtasks":
+            case "Interactive":
             case "InteractiveWithSubtasks":
                 return new BlackBoxSubmissionAdapter();
             default:
