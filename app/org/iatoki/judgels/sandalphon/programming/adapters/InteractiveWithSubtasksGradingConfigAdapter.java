@@ -51,14 +51,14 @@ public final class InteractiveWithSubtasksGradingConfigAdapter extends SingleSou
         @SuppressWarnings("unchecked")
         List<Integer> subtaskPoints = (List<Integer>) parts.get(3);
 
-        String customScorer;
+        String communicator;
         if (formData.communicator.equals("(none)")) {
-            customScorer = null;
+            communicator = null;
         } else {
-            customScorer = formData.communicator;
+            communicator = formData.communicator;
         }
 
-        return new InteractiveWithSubtasksGradingConfig(timeLimit, memoryLimit, testData, subtaskPoints, customScorer);
+        return new InteractiveWithSubtasksGradingConfig(timeLimit, memoryLimit, testData, subtaskPoints, communicator);
     }
 
     @Override
