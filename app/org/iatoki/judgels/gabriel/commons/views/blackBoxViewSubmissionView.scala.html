@@ -49,6 +49,10 @@
     </div>
 </div>
 
+@if(details != null && details.getErrorMessage != null) {
+    <h4>Error Message</h4>
+    <pre>@details.getErrorMessage</pre>
+}
 
 @if(details != null && details.getSubtaskResults.size >= 1 && details.getSubtaskResults.get(0).getId != -1) {
     <h4>Subtask Results</h4>
