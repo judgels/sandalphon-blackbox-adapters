@@ -36,7 +36,7 @@
                     <td>Score</td><td>@submission.getLatestScore</td>
                 </tr>
                 <tr>
-                    <td>Time</td><td>@JudgelsUtils.formatDate(submission.getTime)</td>
+                    <td>Time</td><td><time class="display-time" datetime="@JudgelsUtils.formatISOUTCDateTime(submission.getTime.getTime)">@JudgelsUtils.formatDetailedDateTime(submission.getTime.getTime)</time></td>
                 </tr>
                 <tr>
                     <td>JID</td><td>@submission.getJid</td>
