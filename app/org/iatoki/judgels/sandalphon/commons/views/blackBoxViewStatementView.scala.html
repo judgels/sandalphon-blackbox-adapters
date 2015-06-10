@@ -26,7 +26,7 @@
 
 @if(reasonNotAllowedToSubmit != null) {
     <div class="alert alert-danger" role="alert">@{reasonNotAllowedToSubmit}</div>
-}else {
+} else {
     @b3.form(play.api.mvc.Call("POST", postSubmitUri), 'enctype->"multipart/form-data") {
 
         @b3.hidden("engine", engine)
