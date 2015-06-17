@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.commons;
+package org.iatoki.judgels.sandalphon;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -7,8 +7,8 @@ import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.commons.FileInfo;
 import org.iatoki.judgels.commons.FileSystemProvider;
-import org.iatoki.judgels.sandalphon.commons.views.html.blackBoxViewSubmissionView;
-import org.iatoki.judgels.sandalphon.commons.views.html.blackBoxViewStatementView;
+import org.iatoki.judgels.sandalphon.views.html.blackBoxViewSubmissionView;
+import org.iatoki.judgels.sandalphon.views.html.blackBoxViewStatementView;
 import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.GradingRequest;
 import org.iatoki.judgels.gabriel.GradingSource;
@@ -19,7 +19,7 @@ import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingRequest;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingSource;
 import org.iatoki.judgels.gabriel.blackbox.SourceFile;
-import org.iatoki.judgels.sandalphon.commons.views.html.statementLanguageSelectionLayout;
+import org.iatoki.judgels.sandalphon.views.html.statementLanguageSelectionLayout;
 import play.mvc.Http;
 import play.twirl.api.Html;
 
