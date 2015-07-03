@@ -8,6 +8,10 @@
     <div class="alert alert-danger" role="alert">@{play.mvc.Controller.flash("submissionError")}</div>
 }
 
+@if(reasonNotAllowedToSubmit != null) {
+    <div class="alert alert-danger" role="alert">@{reasonNotAllowedToSubmit}</div>
+}
+
 <h2 class="text-center">@name</h2>
 
 <p class="text-center">Time limit: @config.getTimeLimitInMilliseconds ms</p>
@@ -25,8 +29,6 @@
 @implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-2", "col-md-10") }
 
 @if(reasonNotAllowedToSubmit != null) {
-    <div class="alert alert-danger" role="alert">@{reasonNotAllowedToSubmit}</div>
-} else {
     @b3.form(play.api.mvc.Call("POST", postSubmitUri), 'enctype->"multipart/form-data") {
 
         @b3.hidden("engine", engine)
