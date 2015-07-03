@@ -452,7 +452,7 @@ $(document).ready(function() {
                                     @{i+1}
                                     </td>
                                     <td>
-                                        @b3.text(form("subtaskPoints[" + i + "]"), '_label -> None)(b3.clear.fieldConstructor, implicitly[Lang])
+                                        @b3.text(form("subtaskPoints[" + i + "]"), '_label -> None)(b3.clear.fieldConstructor, implicitly[play.api.i18n.Messages])
                                     </td>
                                 </tr>
                             }
