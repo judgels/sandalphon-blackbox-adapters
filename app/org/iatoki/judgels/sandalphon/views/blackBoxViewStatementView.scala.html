@@ -28,7 +28,7 @@
 
 @implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-2", "col-md-10") }
 
-@if(reasonNotAllowedToSubmit != null) {
+@if(reasonNotAllowedToSubmit == null) {
     @b3.form(play.api.mvc.Call("POST", postSubmitUri), 'enctype->"multipart/form-data") {
 
         @b3.hidden("engine", engine)
