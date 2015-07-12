@@ -1,15 +1,17 @@
-package org.iatoki.judgels.sandalphon.programming.adapters;
+package org.iatoki.judgels.sandalphon.adapters.impls;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.gabriel.GradingConfig;
+import org.iatoki.judgels.gabriel.blackbox.Subtask;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
-import org.iatoki.judgels.gabriel.blackbox.configs.InteractiveWithSubtasksGradingConfig;
+import org.iatoki.judgels.gabriel.blackbox.configs.BatchWithSubtasksGradingConfig;
 import org.iatoki.judgels.sandalphon.Problem;
-import org.iatoki.judgels.sandalphon.forms.programming.configs.InteractiveWithSubtasksGradingConfigForm;
-import org.iatoki.judgels.sandalphon.views.html.programming.grading.interactiveWithSubtasksGradingConfigView;
+import org.iatoki.judgels.sandalphon.adapters.ConfigurableWithTokilibFormat;
+import org.iatoki.judgels.sandalphon.forms.programming.configs.BatchWithSubtasksGradingConfigForm;
+import org.iatoki.judgels.sandalphon.views.html.programming.grading.batchWithSubtasksGradingConfigView;
 import play.data.Form;
 import play.twirl.api.Html;
 
@@ -17,28 +19,28 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public final class InteractiveWithSubtasksGradingConfigAdapter extends SingleSourceFileWithSubtasksBlackBoxGradingConfigAdapter implements ConfigurableWithTokilibFormat {
+public final class BatchWithSubtasksGradingConfigAdapter extends SingleSourceFileWithSubtasksBlackBoxGradingConfigAdapter implements ConfigurableWithTokilibFormat {
 
     @Override
     public Form<?> createFormFromConfig(GradingConfig config) {
-        InteractiveWithSubtasksGradingConfigForm form = new InteractiveWithSubtasksGradingConfigForm();
-        InteractiveWithSubtasksGradingConfig castConfig = (InteractiveWithSubtasksGradingConfig) config;
+        BatchWithSubtasksGradingConfigForm form = new BatchWithSubtasksGradingConfigForm();
+        BatchWithSubtasksGradingConfig castConfig = (BatchWithSubtasksGradingConfig) config;
         fillSingleSourceFileWithSubtasksBlackBoxGradingConfigFormPartsFromConfig(form, castConfig);
 
-        if (castConfig.getCommunicator() == null) {
-            form.communicator = "(none)";
+        if (castConfig.getCustomScorer() == null) {
+            form.customScorer = "(none)";
         } else {
-            form.communicator = castConfig.getCommunicator();
+            form.customScorer = castConfig.getCustomScorer();
         }
 
-        return Form.form(InteractiveWithSubtasksGradingConfigForm.class).fill(form);
+        return Form.form(BatchWithSubtasksGradingConfigForm.class).fill(form);
     }
 
     @Override
     public GradingConfig createConfigFromForm(Form<?> form) {
         @SuppressWarnings("unchecked")
-        Form<InteractiveWithSubtasksGradingConfigForm> castForm = (Form<InteractiveWithSubtasksGradingConfigForm>) form;
-        InteractiveWithSubtasksGradingConfigForm formData = castForm.get();
+        Form<BatchWithSubtasksGradingConfigForm> castForm = (Form<BatchWithSubtasksGradingConfigForm>) form;
+        BatchWithSubtasksGradingConfigForm formData = castForm.get();
 
         List<Object> parts = createSingleSourceFileWithSubtasksBlackBoxGradingConfigPartsFromForm(formData);
 
@@ -51,14 +53,14 @@ public final class InteractiveWithSubtasksGradingConfigAdapter extends SingleSou
         @SuppressWarnings("unchecked")
         List<Integer> subtaskPoints = (List<Integer>) parts.get(3);
 
-        String communicator;
-        if (formData.communicator.equals("(none)")) {
-            communicator = null;
+        String customScorer;
+        if (formData.customScorer.equals("(none)")) {
+            customScorer = null;
         } else {
-            communicator = formData.communicator;
+            customScorer = formData.customScorer;
         }
 
-        return new InteractiveWithSubtasksGradingConfig(timeLimit, memoryLimit, testData, subtaskPoints, communicator);
+        return new BatchWithSubtasksGradingConfig(timeLimit, memoryLimit, testData, subtaskPoints, customScorer);
     }
 
     @Override
@@ -77,7 +79,7 @@ public final class InteractiveWithSubtasksGradingConfigAdapter extends SingleSou
         List<TokilibFile> tokilibFiles = Lists.newArrayList();
 
         for (String filename : filenamesNoExt) {
-            if (!filenames.contains(filename + ".in")) {
+            if (!filenames.contains(filename + ".in") || !filenames.contains(filename + ".out")) {
                 continue;
             }
 
@@ -126,31 +128,35 @@ public final class InteractiveWithSubtasksGradingConfigAdapter extends SingleSou
                 }
             }
 
-            TestCase testCase = new TestCase(filename + ".in", null, subtaskIds);
+            TestCase testCase = new TestCase(filename + ".in", filename + ".out", subtaskIds);
 
             testData.get(file.batchNo).getTestCases().add(testCase);
         }
 
+        BatchWithSubtasksGradingConfig castConfig = (BatchWithSubtasksGradingConfig) config;
+        List<Subtask> subtasks = castConfig.getSubtasks();
         List<Integer> subtaskPoints = Lists.newArrayList();
-        for (int i = 1; i <= maxBatchNo; i++) {
-            subtaskPoints.add(0);
+        for (int i = 0; i < maxBatchNo; i++) {
+            if (i < subtasks.size())
+                subtaskPoints.add(subtasks.get(i).getPoints());
+            else {
+                subtaskPoints.add(0);
+            }
         }
 
-        InteractiveWithSubtasksGradingConfig castConfig = (InteractiveWithSubtasksGradingConfig) config;
-
-        return new InteractiveWithSubtasksGradingConfig(castConfig.getTimeLimitInMilliseconds(), castConfig.getMemoryLimitInKilobytes(), testData, subtaskPoints, castConfig.getCommunicator());
+        return new BatchWithSubtasksGradingConfig(castConfig.getTimeLimitInMilliseconds(), castConfig.getMemoryLimitInKilobytes(), testData, subtaskPoints, castConfig.getCustomScorer());
     }
 
     @Override
     public Form<?> createEmptyForm() {
-        return Form.form(InteractiveWithSubtasksGradingConfigForm.class);
+        return Form.form(BatchWithSubtasksGradingConfigForm.class);
     }
 
     @Override
     public Html renderUpdateGradingConfig(Form<?> form, Problem problem, List<FileInfo> testDataFiles, List<FileInfo> helperFiles) {
         @SuppressWarnings("unchecked")
-        Form<InteractiveWithSubtasksGradingConfigForm> interactiveForm = (Form<InteractiveWithSubtasksGradingConfigForm>) form;
+        Form<BatchWithSubtasksGradingConfigForm> castForm = (Form<BatchWithSubtasksGradingConfigForm>) form;
 
-        return interactiveWithSubtasksGradingConfigView.render(interactiveForm, problem, testDataFiles, helperFiles);
+        return batchWithSubtasksGradingConfigView.render(castForm, problem, testDataFiles, helperFiles);
     }
 }

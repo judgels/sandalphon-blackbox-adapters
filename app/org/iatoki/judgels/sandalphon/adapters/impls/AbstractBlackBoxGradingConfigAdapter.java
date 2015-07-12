@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.programming.adapters;
+package org.iatoki.judgels.sandalphon.adapters.impls;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -6,7 +6,7 @@ import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.AbstractBlackBoxGradingConfig;
 import org.iatoki.judgels.sandalphon.forms.programming.configs.AbstractBlackBoxGradingConfigForm;
-import org.iatoki.judgels.sandalphon.programming.GradingConfigAdapter;
+import org.iatoki.judgels.sandalphon.adapters.GradingConfigAdapter;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.programming.adapters;
+package org.iatoki.judgels.sandalphon.adapters.impls;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;

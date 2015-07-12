@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.programming.adapters;
+package org.iatoki.judgels.sandalphon.adapters.impls;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -9,6 +9,7 @@ import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.BatchGradingConfig;
 import org.iatoki.judgels.sandalphon.Problem;
+import org.iatoki.judgels.sandalphon.adapters.ConfigurableWithAutoPopulation;
 import org.iatoki.judgels.sandalphon.forms.programming.configs.BatchGradingConfigForm;
 import org.iatoki.judgels.sandalphon.views.html.programming.grading.batchGradingConfigView;
 import play.data.Form;

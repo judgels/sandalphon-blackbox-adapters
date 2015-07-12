@@ -1,9 +1,6 @@
-package org.iatoki.judgels.sandalphon.programming;
+package org.iatoki.judgels.sandalphon.adapters.impls;
 
-import org.iatoki.judgels.sandalphon.programming.adapters.BatchGradingConfigAdapter;
-import org.iatoki.judgels.sandalphon.programming.adapters.BatchWithSubtasksGradingConfigAdapter;
-import org.iatoki.judgels.sandalphon.programming.adapters.InteractiveGradingConfigAdapter;
-import org.iatoki.judgels.sandalphon.programming.adapters.InteractiveWithSubtasksGradingConfigAdapter;
+import org.iatoki.judgels.sandalphon.adapters.GradingConfigAdapter;
 
 public final class GradingConfigAdapters {
     private GradingConfigAdapters() {
