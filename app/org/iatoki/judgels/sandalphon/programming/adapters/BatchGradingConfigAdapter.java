@@ -3,7 +3,7 @@ package org.iatoki.judgels.sandalphon.programming.adapters;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.io.FilenameUtils;
-import org.iatoki.judgels.commons.FileInfo;
+import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
