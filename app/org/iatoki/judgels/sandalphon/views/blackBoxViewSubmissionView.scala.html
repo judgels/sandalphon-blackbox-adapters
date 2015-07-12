@@ -1,6 +1,6 @@
 @(submission: org.iatoki.judgels.sandalphon.Submission, details: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails, sourceFiles: Map[String, org.iatoki.judgels.gabriel.blackbox.SourceFile], authorName: String, problemAlias: String, problemName: String, gradingLanguageName: String, contestName: String)
 
-@import org.iatoki.judgels.play.JudgelsUtils
+@import org.iatoki.judgels.play.JudgelsPlayUtils
 
 <h3>Submission #@submission.getId</h3>
 
@@ -36,7 +36,7 @@
                     <td>Score</td><td>@submission.getLatestScore</td>
                 </tr>
                 <tr>
-                    <td>Time</td><td><time class="display-time" datetime="@JudgelsUtils.formatISOUTCDateTime(submission.getTime.getTime)">@JudgelsUtils.formatDetailedDateTime(submission.getTime.getTime)</time></td>
+                    <td>Time</td><td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(submission.getTime.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(submission.getTime.getTime)</time></td>
                 </tr>
                 <tr>
                     <td>JID</td><td>@submission.getJid</td>
