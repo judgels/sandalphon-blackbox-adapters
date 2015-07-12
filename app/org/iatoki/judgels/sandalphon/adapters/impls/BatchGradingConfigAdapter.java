@@ -10,7 +10,7 @@ import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.BatchGradingConfig;
 import org.iatoki.judgels.sandalphon.Problem;
 import org.iatoki.judgels.sandalphon.adapters.ConfigurableWithAutoPopulation;
-import org.iatoki.judgels.sandalphon.forms.programming.configs.BatchGradingConfigForm;
+import org.iatoki.judgels.sandalphon.forms.BatchGradingConfigForm;
 import org.iatoki.judgels.sandalphon.views.html.programming.grading.batchGradingConfigView;
 import play.data.Form;
 import play.twirl.api.Html;

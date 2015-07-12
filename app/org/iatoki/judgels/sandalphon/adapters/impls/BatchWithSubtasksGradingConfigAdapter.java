@@ -10,7 +10,7 @@ import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.BatchWithSubtasksGradingConfig;
 import org.iatoki.judgels.sandalphon.Problem;
 import org.iatoki.judgels.sandalphon.adapters.ConfigurableWithTokilibFormat;
-import org.iatoki.judgels.sandalphon.forms.programming.configs.BatchWithSubtasksGradingConfigForm;
+import org.iatoki.judgels.sandalphon.forms.BatchWithSubtasksGradingConfigForm;
 import org.iatoki.judgels.sandalphon.views.html.programming.grading.batchWithSubtasksGradingConfigView;
 import play.data.Form;
 import play.twirl.api.Html;

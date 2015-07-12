@@ -6,7 +6,7 @@ import com.google.common.collect.Lists;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.SingleSourceFileWithoutSubtasksBlackBoxGradingConfig;
-import org.iatoki.judgels.sandalphon.forms.programming.configs.SingleSourceFileWithoutSubtasksBlackBoxGradingConfigForm;
+import org.iatoki.judgels.sandalphon.forms.SingleSourceFileWithoutSubtasksBlackBoxGradingConfigForm;
 
 import java.util.List;
 
