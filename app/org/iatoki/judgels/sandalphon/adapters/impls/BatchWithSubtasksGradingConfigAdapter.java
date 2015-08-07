@@ -137,9 +137,9 @@ public final class BatchWithSubtasksGradingConfigAdapter extends SingleSourceFil
         List<Subtask> subtasks = castConfig.getSubtasks();
         List<Integer> subtaskPoints = Lists.newArrayList();
         for (int i = 0; i < maxBatchNo; i++) {
-            if (i < subtasks.size())
+            if (i < subtasks.size()) {
                 subtaskPoints.add(subtasks.get(i).getPoints());
-            else {
+            } else {
                 subtaskPoints.add(0);
             }
         }
