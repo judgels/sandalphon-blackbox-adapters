@@ -1,13 +1,13 @@
 import de.johoop.testngplugin.TestNGPlugin
 import de.johoop.jacoco4sbt.JacocoPlugin.jacoco
 
-lazy val gabrielblackboxadapter = (project in file("."))
+lazy val sandalphonblackboxadapters = (project in file("."))
     .enablePlugins(PlayJava)
     .disablePlugins(plugins.JUnitXmlReportPlugin)
     .dependsOn(sandalphoncommons, gabrielblackbox)
     .aggregate(sandalphoncommons, gabrielblackbox)
     .settings(
-        name := "gabrielblackboxadapter",
+        name := "sandalphonblackboxadapters",
         version := IO.read(file("version.properties")).trim,
         scalaVersion := "2.11.7",
         routesGenerator := InjectedRoutesGenerator
