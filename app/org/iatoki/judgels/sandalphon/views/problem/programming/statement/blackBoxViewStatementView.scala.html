@@ -1,0 +1,61 @@
+@(postSubmitUri: String, name: String, statement: String, config: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig, engine: String, allowedGradingLanguageNames: Set[String], reasonNotAllowedToSubmit: String)
+
+@import play.i18n.Messages
+@import org.iatoki.judgels.gabriel.GradingLanguageRegistry
+@import com.google.common.base.Joiner
+
+@if(play.mvc.Controller.flash("submissionError") != null) {
+    <div class="alert alert-danger" role="alert">@{play.mvc.Controller.flash("submissionError")}</div>
+}
+
+@if(reasonNotAllowedToSubmit != null) {
+    <div class="alert alert-danger" role="alert">@{reasonNotAllowedToSubmit}</div>
+}
+
+<h2 class="text-center">@name</h2>
+
+<p class="text-center">Time limit: @config.getTimeLimitInMilliseconds ms</p>
+<p class="text-center">Memory limit: @config.getMemoryLimitInKilobytes KB</p>
+
+<p>&nbsp;</p>
+
+<div class="content-text">
+    @Html(statement)
+</div>
+
+<hr />
+<h4>Submit Solution</h4>
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-2", "col-md-10") }
+
+@if(reasonNotAllowedToSubmit == null) {
+    @b3.form(play.api.mvc.Call("POST", postSubmitUri), 'enctype->"multipart/form-data") {
+
+        @b3.hidden("engine", engine)
+        @b3.hidden("sourceFileFieldKeys", Joiner.on(",").join(config.getSourceFileFields.keySet))
+
+        @for((k, v) <- config.getSourceFileFields) {
+            <div class="form-group">
+                <label for="@k" class="col-md-2">@v</label>
+                <div class="col-md-10">
+                    <input type="file" name="@k">
+                </div>
+            </div>
+        }
+
+        <div class="form-group">
+            <label for="language" class="col-sm-2 control-label">Language</label>
+            <div class="col-sm-10">
+                <select name="language">
+                    @for((k, v) <- GradingLanguageRegistry.getInstance().getGradingLanguages) {
+                        @if(allowedGradingLanguageNames.contains(k)) {
+                            <option value="@k">@v</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+        @b3.submit('class -> "btn btn-primary") { @Messages.get("Submit") }
+    }
+}
