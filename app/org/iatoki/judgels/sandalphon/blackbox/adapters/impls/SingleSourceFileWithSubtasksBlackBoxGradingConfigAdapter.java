@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.adapters.impls;
+package org.iatoki.judgels.sandalphon.blackbox.adapters.impls;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -6,7 +6,7 @@ import org.iatoki.judgels.gabriel.blackbox.Subtask;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.SingleSourceFileWithSubtasksBlackBoxGradingConfig;
-import org.iatoki.judgels.sandalphon.forms.SingleSourceFileWithSubtasksBlackBoxGradingConfigForm;
+import org.iatoki.judgels.sandalphon.blackbox.forms.SingleSourceFileWithSubtasksBlackBoxGradingConfigForm;
 
 import java.util.Collections;
 import java.util.List;

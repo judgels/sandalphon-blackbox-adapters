@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.adapters.impls;
+package org.iatoki.judgels.sandalphon.blackbox.adapters.impls;
 
 import org.iatoki.judgels.sandalphon.adapters.GradingConfigAdapter;
 

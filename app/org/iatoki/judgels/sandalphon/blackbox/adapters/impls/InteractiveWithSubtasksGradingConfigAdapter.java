@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.adapters.impls;
+package org.iatoki.judgels.sandalphon.blackbox.adapters.impls;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -9,8 +9,9 @@ import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.InteractiveWithSubtasksGradingConfig;
 import org.iatoki.judgels.sandalphon.Problem;
 import org.iatoki.judgels.sandalphon.adapters.ConfigurableWithTokilibFormat;
-import org.iatoki.judgels.sandalphon.forms.InteractiveWithSubtasksGradingConfigForm;
-import org.iatoki.judgels.sandalphon.views.html.problem.programming.grading.interactiveWithSubtasksGradingConfigView;
+import org.iatoki.judgels.sandalphon.adapters.impls.TokilibFile;
+import org.iatoki.judgels.sandalphon.blackbox.forms.InteractiveWithSubtasksGradingConfigForm;
+import org.iatoki.judgels.sandalphon.blackbox.views.html.problem.programming.grading.interactiveWithSubtasksGradingConfigView;
 import play.data.Form;
 import play.twirl.api.Html;
 

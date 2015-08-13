@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.adapters.impls;
+package org.iatoki.judgels.sandalphon.blackbox.adapters.impls;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -10,8 +10,8 @@ import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.sandalphon.Submission;
 import org.iatoki.judgels.sandalphon.SubmissionException;
 import org.iatoki.judgels.sandalphon.adapters.SubmissionAdapter;
-import org.iatoki.judgels.sandalphon.views.html.problem.programming.submission.blackBoxViewSubmissionView;
-import org.iatoki.judgels.sandalphon.views.html.problem.programming.statement.blackBoxViewStatementView;
+import org.iatoki.judgels.sandalphon.blackbox.views.html.problem.programming.submission.blackBoxViewSubmissionView;
+import org.iatoki.judgels.sandalphon.blackbox.views.html.problem.programming.statement.blackBoxViewStatementView;
 import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.GradingRequest;
 import org.iatoki.judgels.gabriel.GradingSource;

@@ -1,7 +1,7 @@
-package org.iatoki.judgels.sandalphon.adapters.impls;
+package org.iatoki.judgels.sandalphon.blackbox.adapters.impls;
 
 import org.iatoki.judgels.gabriel.blackbox.configs.SingleSourceFileBlackBoxGradingConfig;
-import org.iatoki.judgels.sandalphon.forms.SingleSourceFileBlackBoxGradingConfigForm;
+import org.iatoki.judgels.sandalphon.blackbox.forms.SingleSourceFileBlackBoxGradingConfigForm;
 
 import java.util.List;
 
