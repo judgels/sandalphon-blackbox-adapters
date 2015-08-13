@@ -2,6 +2,7 @@ package org.iatoki.judgels.sandalphon.blackbox.adapters.impls;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
@@ -37,6 +38,11 @@ import java.util.stream.Collectors;
 public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
 
     private static final long MAX_SUBMISSION_FILE_LENGTH = 300 * 1024; // 300 KB
+
+    @Override
+    public Set<String> getSupportedGradingEngineNames() {
+        return ImmutableSet.of("Batch", "BatchWithSubtasks", "Interactive", "InteractiveWithSubtasks");
+    }
 
     @Override
     public Html renderViewStatement(String postSubmitUri, String name, String statement, GradingConfig config, String engine, Set<String> allowedGradingLanguageNames, String reasonNotAllowedToSubmit) {

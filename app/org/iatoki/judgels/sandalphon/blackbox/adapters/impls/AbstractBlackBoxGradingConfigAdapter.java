@@ -1,6 +1,7 @@
 package org.iatoki.judgels.sandalphon.blackbox.adapters.impls;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
@@ -9,8 +10,15 @@ import org.iatoki.judgels.sandalphon.blackbox.forms.AbstractBlackBoxGradingConfi
 import org.iatoki.judgels.sandalphon.adapters.GradingConfigAdapter;
 
 import java.util.List;
+import java.util.Set;
 
 public abstract class AbstractBlackBoxGradingConfigAdapter implements GradingConfigAdapter {
+
+    @Override
+    public Set<String> getSupportedGradingEngineNames() {
+        String name = getClass().getSimpleName();
+        return ImmutableSet.of(name.substring(0, name.length() - "GradingConfigAdapter".length()));
+    }
 
     protected final void fillAbstractBlackBoxGradingFormPartsFromConfig(AbstractBlackBoxGradingConfigForm form, AbstractBlackBoxGradingConfig config) {
         form.timeLimit = config.getTimeLimitInMilliseconds();

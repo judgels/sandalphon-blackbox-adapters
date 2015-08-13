@@ -1,0 +1,4 @@
+org.iatoki.judgels.sandalphon.blackbox.adapters.impls.BatchGradingConfigAdapter
+org.iatoki.judgels.sandalphon.blackbox.adapters.impls.BatchWithSubtasksGradingConfigAdapter
+org.iatoki.judgels.sandalphon.blackbox.adapters.impls.InteractiveGradingConfigAdapter
+org.iatoki.judgels.sandalphon.blackbox.adapters.impls.InteractiveWithSubtasksGradingConfigAdapter
