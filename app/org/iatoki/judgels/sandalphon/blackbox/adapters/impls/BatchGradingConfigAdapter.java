@@ -8,10 +8,10 @@ import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.BatchGradingConfig;
-import org.iatoki.judgels.sandalphon.Problem;
 import org.iatoki.judgels.sandalphon.adapters.ConfigurableWithAutoPopulation;
 import org.iatoki.judgels.sandalphon.blackbox.forms.BatchGradingConfigForm;
 import org.iatoki.judgels.sandalphon.blackbox.views.html.problem.programming.grading.batchGradingConfigView;
+import play.api.mvc.Call;
 import play.data.Form;
 import play.twirl.api.Html;
 
@@ -82,11 +82,11 @@ public final class BatchGradingConfigAdapter extends SingleSourceFileWithoutSubt
     }
 
     @Override
-    public Html renderUpdateGradingConfig(Form<?> form, Problem problem, List<FileInfo> testDataFiles, List<FileInfo> helperFiles) {
+    public Html renderUpdateGradingConfig(Form<?> form, Call postUpdateGradingConfigCall, List<FileInfo> testDataFiles, List<FileInfo> helperFiles) {
         @SuppressWarnings("unchecked")
         Form<BatchGradingConfigForm> castForm = (Form<BatchGradingConfigForm>) form;
 
-        return batchGradingConfigView.render(castForm, problem, testDataFiles, helperFiles);
+        return batchGradingConfigView.render(castForm, postUpdateGradingConfigCall, testDataFiles, helperFiles);
     }
 
     private boolean isTestCasePair(String in, String out) {

@@ -8,10 +8,10 @@ import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.InteractiveGradingConfig;
-import org.iatoki.judgels.sandalphon.Problem;
 import org.iatoki.judgels.sandalphon.adapters.ConfigurableWithAutoPopulation;
 import org.iatoki.judgels.sandalphon.blackbox.forms.InteractiveGradingConfigForm;
 import org.iatoki.judgels.sandalphon.blackbox.views.html.problem.programming.grading.interactiveGradingConfigView;
+import play.api.mvc.Call;
 import play.data.Form;
 import play.twirl.api.Html;
 
@@ -80,11 +80,11 @@ public final class InteractiveGradingConfigAdapter extends SingleSourceFileWitho
     }
 
     @Override
-    public Html renderUpdateGradingConfig(Form<?> form, Problem problem, List<FileInfo> testDataFiles, List<FileInfo> helperFiles) {
+    public Html renderUpdateGradingConfig(Form<?> form, Call postUpdateGradingConfigCall, List<FileInfo> testDataFiles, List<FileInfo> helperFiles) {
         @SuppressWarnings("unchecked")
         Form<InteractiveGradingConfigForm> castForm = (Form<InteractiveGradingConfigForm>) form;
 
-        return interactiveGradingConfigView.render(castForm, problem, testDataFiles, helperFiles);
+        return interactiveGradingConfigView.render(castForm, postUpdateGradingConfigCall, testDataFiles, helperFiles);
     }
 
     private boolean isTestCase(String in) {

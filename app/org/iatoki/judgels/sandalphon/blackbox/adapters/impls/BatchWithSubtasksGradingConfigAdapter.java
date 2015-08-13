@@ -8,11 +8,11 @@ import org.iatoki.judgels.gabriel.blackbox.Subtask;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.BatchWithSubtasksGradingConfig;
-import org.iatoki.judgels.sandalphon.Problem;
 import org.iatoki.judgels.sandalphon.adapters.ConfigurableWithTokilibFormat;
 import org.iatoki.judgels.sandalphon.adapters.impls.TokilibFile;
 import org.iatoki.judgels.sandalphon.blackbox.forms.BatchWithSubtasksGradingConfigForm;
 import org.iatoki.judgels.sandalphon.blackbox.views.html.problem.programming.grading.batchWithSubtasksGradingConfigView;
+import play.api.mvc.Call;
 import play.data.Form;
 import play.twirl.api.Html;
 
@@ -154,10 +154,10 @@ public final class BatchWithSubtasksGradingConfigAdapter extends SingleSourceFil
     }
 
     @Override
-    public Html renderUpdateGradingConfig(Form<?> form, Problem problem, List<FileInfo> testDataFiles, List<FileInfo> helperFiles) {
+    public Html renderUpdateGradingConfig(Form<?> form, Call postUpdateGradingConfigCall, List<FileInfo> testDataFiles, List<FileInfo> helperFiles) {
         @SuppressWarnings("unchecked")
         Form<BatchWithSubtasksGradingConfigForm> castForm = (Form<BatchWithSubtasksGradingConfigForm>) form;
 
-        return batchWithSubtasksGradingConfigView.render(castForm, problem, testDataFiles, helperFiles);
+        return batchWithSubtasksGradingConfigView.render(castForm, postUpdateGradingConfigCall, testDataFiles, helperFiles);
     }
 }

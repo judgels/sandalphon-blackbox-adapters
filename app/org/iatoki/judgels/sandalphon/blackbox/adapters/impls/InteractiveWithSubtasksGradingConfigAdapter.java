@@ -7,11 +7,11 @@ import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.InteractiveWithSubtasksGradingConfig;
-import org.iatoki.judgels.sandalphon.Problem;
 import org.iatoki.judgels.sandalphon.adapters.ConfigurableWithTokilibFormat;
 import org.iatoki.judgels.sandalphon.adapters.impls.TokilibFile;
 import org.iatoki.judgels.sandalphon.blackbox.forms.InteractiveWithSubtasksGradingConfigForm;
 import org.iatoki.judgels.sandalphon.blackbox.views.html.problem.programming.grading.interactiveWithSubtasksGradingConfigView;
+import play.api.mvc.Call;
 import play.data.Form;
 import play.twirl.api.Html;
 
@@ -149,10 +149,10 @@ public final class InteractiveWithSubtasksGradingConfigAdapter extends SingleSou
     }
 
     @Override
-    public Html renderUpdateGradingConfig(Form<?> form, Problem problem, List<FileInfo> testDataFiles, List<FileInfo> helperFiles) {
+    public Html renderUpdateGradingConfig(Form<?> form, Call postUpdateGradingConfigCall, List<FileInfo> testDataFiles, List<FileInfo> helperFiles) {
         @SuppressWarnings("unchecked")
         Form<InteractiveWithSubtasksGradingConfigForm> interactiveForm = (Form<InteractiveWithSubtasksGradingConfigForm>) form;
 
-        return interactiveWithSubtasksGradingConfigView.render(interactiveForm, problem, testDataFiles, helperFiles);
+        return interactiveWithSubtasksGradingConfigView.render(interactiveForm, postUpdateGradingConfigCall, testDataFiles, helperFiles);
     }
 }

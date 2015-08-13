@@ -1,7 +1,6 @@
-@(form: Form[org.iatoki.judgels.sandalphon.blackbox.forms.InteractiveGradingConfigForm], problem: org.iatoki.judgels.sandalphon.Problem, testDataFiles: List[org.iatoki.judgels.FileInfo], helperFiles: List[org.iatoki.judgels.FileInfo])
+@(form: Form[org.iatoki.judgels.sandalphon.blackbox.forms.InteractiveGradingConfigForm], postUpdateGradingConfigCall: play.api.mvc.Call, testDataFiles: List[org.iatoki.judgels.FileInfo], helperFiles: List[org.iatoki.judgels.FileInfo])
 
 @import play.i18n.Messages
-@import org.iatoki.judgels.sandalphon.controllers.routes
 
 @implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
 
@@ -196,7 +195,7 @@ $(document).ready(function() {
 
 </script>
 
-@b3.form(routes.ProgrammingProblemGradingController.postUpdateGradingConfig(problem.getId)) {
+@b3.form(postUpdateGradingConfigCall) {
     @helper.CSRF.formField
 
 
