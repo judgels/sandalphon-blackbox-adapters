@@ -8,21 +8,21 @@ import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.FileSystemProvider;
-import org.iatoki.judgels.sandalphon.Submission;
-import org.iatoki.judgels.sandalphon.SubmissionException;
-import org.iatoki.judgels.sandalphon.adapters.SubmissionAdapter;
-import org.iatoki.judgels.sandalphon.blackbox.views.html.problem.programming.submission.blackBoxViewSubmissionView;
-import org.iatoki.judgels.sandalphon.blackbox.views.html.problem.programming.statement.blackBoxViewStatementView;
 import org.iatoki.judgels.gabriel.GradingConfig;
-import org.iatoki.judgels.gabriel.GradingRequest;
-import org.iatoki.judgels.gabriel.GradingSource;
 import org.iatoki.judgels.gabriel.GradingLanguage;
 import org.iatoki.judgels.gabriel.GradingLanguageRegistry;
+import org.iatoki.judgels.gabriel.GradingRequest;
+import org.iatoki.judgels.gabriel.GradingSource;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingRequest;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingSource;
 import org.iatoki.judgels.gabriel.blackbox.SourceFile;
+import org.iatoki.judgels.sandalphon.ProgrammingSubmission;
+import org.iatoki.judgels.sandalphon.ProgrammingSubmissionException;
+import org.iatoki.judgels.sandalphon.adapters.SubmissionAdapter;
+import org.iatoki.judgels.sandalphon.blackbox.views.html.problem.programming.statement.blackBoxViewStatementView;
+import org.iatoki.judgels.sandalphon.blackbox.views.html.problem.programming.submission.blackBoxViewSubmissionView;
 import org.iatoki.judgels.sandalphon.views.html.statementLanguageSelectionLayout;
 import play.mvc.Http;
 import play.twirl.api.Html;
@@ -56,13 +56,13 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
     }
 
     @Override
-    public Html renderViewSubmission(Submission submission, GradingSource source, String authorName, String problemAlias, String problemName, String gradingLanguageName, String contestName) {
+    public Html renderViewSubmission(ProgrammingSubmission submission, GradingSource source, String authorName, String problemAlias, String problemName, String gradingLanguageName, String contestName) {
         BlackBoxGradingResultDetails details = new Gson().fromJson(submission.getLatestDetails(), BlackBoxGradingResultDetails.class);
         return blackBoxViewSubmissionView.render(submission, details, ((BlackBoxGradingSource) source).getSourceFiles(), authorName, problemAlias, problemName, gradingLanguageName, contestName);
     }
 
     @Override
-    public GradingSource createGradingSourceFromNewSubmission(Http.MultipartFormData body) throws SubmissionException {
+    public GradingSource createGradingSourceFromNewSubmission(Http.MultipartFormData body) throws ProgrammingSubmissionException {
         String language = body.asFormUrlEncoded().get("language")[0];
         String sourceFileFieldKeysUnparsed = body.asFormUrlEncoded().get("sourceFileFieldKeys")[0];
 
@@ -83,14 +83,14 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
             File file = entry.getValue();
 
             if (file.length() > MAX_SUBMISSION_FILE_LENGTH) {
-                throw new SubmissionException("Source file must not exceed 300KB");
+                throw new ProgrammingSubmissionException("Source file must not exceed 300KB");
             }
 
             String content;
             try {
                 content = FileUtils.readFileToString(file);
             } catch (IOException e) {
-                throw new SubmissionException(e.getMessage());
+                throw new ProgrammingSubmissionException(e.getMessage());
             }
 
             formFileContents.put(key, content);
@@ -99,14 +99,14 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
         return createBlackBoxGradingSourceFromNewSubmission(language, sourceFileFieldKeys, formFilenames, formFileContents.build());
     }
 
-    public GradingSource createBlackBoxGradingSourceFromNewSubmission(String language, List<String> sourceFileFieldKeys, Map<String, String> formFilenames, Map<String, String> formFileContents) throws SubmissionException {
+    public GradingSource createBlackBoxGradingSourceFromNewSubmission(String language, List<String> sourceFileFieldKeys, Map<String, String> formFilenames, Map<String, String> formFileContents) throws ProgrammingSubmissionException {
         GradingLanguage gradingLanguage = GradingLanguageRegistry.getInstance().getLanguage(language);
 
         ImmutableMap.Builder<String, SourceFile> sourceFiles = ImmutableMap.builder();
 
         for (String fieldKey : sourceFileFieldKeys) {
             if (!formFilenames.containsKey(fieldKey)) {
-                throw new SubmissionException("You must submit a source file for '" + fieldKey + "'");
+                throw new ProgrammingSubmissionException("You must submit a source file for '" + fieldKey + "'");
             }
 
             String filename = formFilenames.get(fieldKey);
@@ -115,7 +115,7 @@ public final class BlackBoxSubmissionAdapter implements SubmissionAdapter {
             String verification = gradingLanguage.verifyFile(filename, fileContent);
 
             if (verification != null) {
-                throw new SubmissionException(verification);
+                throw new ProgrammingSubmissionException(verification);
             }
 
             sourceFiles.put(fieldKey, new SourceFile(filename, fileContent));

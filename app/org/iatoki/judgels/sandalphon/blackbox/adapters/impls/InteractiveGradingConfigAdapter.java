@@ -18,6 +18,7 @@ import play.twirl.api.Html;
 import java.util.List;
 
 public final class InteractiveGradingConfigAdapter extends SingleSourceFileWithoutSubtasksBlackBoxGradingConfigAdapter implements ConfigurableWithAutoPopulation {
+
     @Override
     public Form<?> createFormFromConfig(GradingConfig config) {
         InteractiveGradingConfigForm form = new InteractiveGradingConfigForm();

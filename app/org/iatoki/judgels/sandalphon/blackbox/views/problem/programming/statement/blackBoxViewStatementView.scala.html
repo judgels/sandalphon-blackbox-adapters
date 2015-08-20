@@ -1,8 +1,9 @@
-@(postSubmitUri: String, name: String, statement: String, config: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig, engine: String, allowedGradingLanguageNames: Set[String], reasonNotAllowedToSubmit: String)
-
 @import play.i18n.Messages
-@import org.iatoki.judgels.gabriel.GradingLanguageRegistry
 @import com.google.common.base.Joiner
+@import org.iatoki.judgels.gabriel.GradingLanguageRegistry
+@import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig
+
+@(postSubmitUri: String, name: String, statement: String, blackBoxGradingConfig: BlackBoxGradingConfig, engine: String, allowedGradingLanguageNames: Set[String], reasonNotAllowedToSubmit: String)
 
 @if(play.mvc.Controller.flash("submissionError") != null) {
     <div class="alert alert-danger" role="alert">@{play.mvc.Controller.flash("submissionError")}</div>
@@ -14,8 +15,8 @@
 
 <h2 class="text-center">@name</h2>
 
-<p class="text-center">Time limit: @config.getTimeLimitInMilliseconds ms</p>
-<p class="text-center">Memory limit: @config.getMemoryLimitInKilobytes KB</p>
+<p class="text-center">Time limit: @blackBoxGradingConfig.getTimeLimitInMilliseconds ms</p>
+<p class="text-center">Memory limit: @blackBoxGradingConfig.getMemoryLimitInKilobytes KB</p>
 
 <p>&nbsp;</p>
 
@@ -32,9 +33,9 @@
     @b3.form(play.api.mvc.Call("POST", postSubmitUri), 'enctype->"multipart/form-data") {
 
         @b3.hidden("engine", engine)
-        @b3.hidden("sourceFileFieldKeys", Joiner.on(",").join(config.getSourceFileFields.keySet))
+        @b3.hidden("sourceFileFieldKeys", Joiner.on(",").join(blackBoxGradingConfig.getSourceFileFields.keySet))
 
-        @for((k, v) <- config.getSourceFileFields) {
+        @for((k, v) <- blackBoxGradingConfig.getSourceFileFields) {
             <div class="form-group">
                 <label for="@k" class="col-md-2">@v</label>
                 <div class="col-md-10">

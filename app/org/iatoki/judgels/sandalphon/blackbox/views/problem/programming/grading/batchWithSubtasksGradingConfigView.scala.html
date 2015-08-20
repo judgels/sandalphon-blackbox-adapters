@@ -1,6 +1,9 @@
-@(form: Form[org.iatoki.judgels.sandalphon.blackbox.forms.BatchWithSubtasksGradingConfigForm], postUpdateGradingConfigCall: play.api.mvc.Call, testDataFiles: List[org.iatoki.judgels.FileInfo], helperFiles: List[org.iatoki.judgels.FileInfo])
-
 @import play.i18n.Messages
+@import play.api.mvc.Call
+@import org.iatoki.judgels.FileInfo
+@import org.iatoki.judgels.sandalphon.blackbox.forms.BatchWithSubtasksGradingConfigForm
+
+@(batchWithSubtasksGradingConfigForm: Form[BatchWithSubtasksGradingConfigForm], postUpdateGradingConfigCall: Call, testDataFiles: List[FileInfo], helperFiles: List[FileInfo])
 
 @implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
 
@@ -69,7 +72,7 @@ $(document).ready(function() {
 
         // Add subtasks
         var subtaskCheckboxes = [];
-        for (var subtaskNo = 0; subtaskNo < @form.get.subtaskPoints.size(); subtaskNo++) {
+        for (var subtaskNo = 0; subtaskNo < @batchWithSubtasksGradingConfigForm.get.subtaskPoints.size(); subtaskNo++) {
             var subtaskCheckbox = sampleTestCaseSubtaskTemplate.clone().removeAttr('id');
             subtaskCheckbox.find('input')
                 .val(subtaskNo + 1)
@@ -206,7 +209,7 @@ $(document).ready(function() {
 
         // Add subtasks
         var subtaskCheckboxes = [];
-        for (var subtaskNo = 0; subtaskNo < @form.get.subtaskPoints.size(); subtaskNo++) {
+        for (var subtaskNo = 0; subtaskNo < @batchWithSubtasksGradingConfigForm.get.subtaskPoints.size(); subtaskNo++) {
             var subtaskCheckbox = testGroupSubtaskTemplate.clone().removeAttr('id');
             subtaskCheckbox.find('input')
                 .val(subtaskNo + 1)
@@ -302,22 +305,22 @@ $(document).ready(function() {
         addNewTestGroup();
     });
 
-    @for(i <- 0 until form.get.sampleTestCaseInputs.size) {
-        addNewSampleTestCase('@form.get.sampleTestCaseInputs.get(i)', '@form.get.sampleTestCaseOutputs.get(i)');
-        @for(j <- 0 until form.get.sampleTestCaseSubtaskIds.get(i).size) {
-            @if(form.get.sampleTestCaseSubtaskIds.get(i).get(j) != null) {
+    @for(i <- 0 until batchWithSubtasksGradingConfigForm.get.sampleTestCaseInputs.size) {
+        addNewSampleTestCase('@batchWithSubtasksGradingConfigForm.get.sampleTestCaseInputs.get(i)', '@batchWithSubtasksGradingConfigForm.get.sampleTestCaseOutputs.get(i)');
+        @for(j <- 0 until batchWithSubtasksGradingConfigForm.get.sampleTestCaseSubtaskIds.get(i).size) {
+            @if(batchWithSubtasksGradingConfigForm.get.sampleTestCaseSubtaskIds.get(i).get(j) != null) {
                 checkSampleTestCaseSubtask(@i, @j);
             }
         }
     }
 
-    @for(i <- 0 until form.get.testCaseInputs.size) {
+    @for(i <- 0 until batchWithSubtasksGradingConfigForm.get.testCaseInputs.size) {
         addNewTestGroup();
-        @for(j <- 0 until form.get.testCaseInputs.get(i).size) {
-            addNewTestCase(@i, '@form.get.testCaseInputs.get(i).get(j)', '@form.get.testCaseOutputs.get(i).get(j)');
+        @for(j <- 0 until batchWithSubtasksGradingConfigForm.get.testCaseInputs.get(i).size) {
+            addNewTestCase(@i, '@batchWithSubtasksGradingConfigForm.get.testCaseInputs.get(i).get(j)', '@batchWithSubtasksGradingConfigForm.get.testCaseOutputs.get(i).get(j)');
         }
-        @for(j <- 0 until form.get.testGroupSubtaskIds.get(i).size) {
-            @if(form.get.testGroupSubtaskIds.get(i).get(j) != null) {
+        @for(j <- 0 until batchWithSubtasksGradingConfigForm.get.testGroupSubtaskIds.get(i).size) {
+            @if(batchWithSubtasksGradingConfigForm.get.testGroupSubtaskIds.get(i).get(j) != null) {
                 checkTestGroupSubtask(@i, @j);
             }
         }
@@ -330,13 +333,13 @@ $(document).ready(function() {
     @helper.CSRF.formField
 
 
-    @b3.inputWrapped("timeLimit", form("timeLimit"), '_label -> "Time Limit") { input =>
+    @b3.inputWrapped("timeLimit", batchWithSubtasksGradingConfigForm("timeLimit"), '_label -> "Time Limit") { input =>
         <div class="input-group">
             @input
             <div class="input-group-addon">milliseconds</div>
         </div>
     }
-    @b3.inputWrapped("memoryLimit", form("memoryLimit"), '_label -> "Memory Limit") { input =>
+    @b3.inputWrapped("memoryLimit", batchWithSubtasksGradingConfigForm("memoryLimit"), '_label -> "Memory Limit") { input =>
         <div class="input-group">
             @input
             <div class="input-group-addon">kilobytes</div>
@@ -445,13 +448,13 @@ $(document).ready(function() {
                             </tr>
                         </thead>
                         <tbody>
-                            @for(i <- 0 until form.get.subtaskPoints.size) {
+                            @for(i <- 0 until batchWithSubtasksGradingConfigForm.get.subtaskPoints.size) {
                                 <tr>
                                     <td>
                                     @{i+1}
                                     </td>
                                     <td>
-                                        @b3.text(form("subtaskPoints[" + i + "]"), '_label -> None)(b3.clear.fieldConstructor, implicitly[play.api.i18n.Messages])
+                                        @b3.text(batchWithSubtasksGradingConfigForm("subtaskPoints[" + i + "]"), '_label -> None)(b3.clear.fieldConstructor, implicitly[play.api.i18n.Messages])
                                     </td>
                                 </tr>
                             }
@@ -462,7 +465,7 @@ $(document).ready(function() {
         </div>
     </div>
 
-    @b3.select(form("customScorer"), helperFiles.map(f => f.getName -> f.getName).toSeq ++ Seq("(none)" -> "(None)"), '_label -> "Custom Scorer")
+    @b3.select(batchWithSubtasksGradingConfigForm("customScorer"), helperFiles.map(f => f.getName -> f.getName).toSeq ++ Seq("(none)" -> "(None)"), '_label -> "Custom Scorer")
 
 
     @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }

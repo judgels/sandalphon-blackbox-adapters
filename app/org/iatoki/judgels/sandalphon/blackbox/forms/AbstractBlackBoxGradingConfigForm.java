@@ -5,6 +5,7 @@ import play.data.validation.Constraints;
 import java.util.List;
 
 public abstract class AbstractBlackBoxGradingConfigForm {
+
     @Constraints.Required
     public int timeLimit;
 

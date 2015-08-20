@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public abstract class SingleSourceFileWithSubtasksBlackBoxGradingConfigAdapter extends SingleSourceFileBlackBoxGradingConfigAdapter {
+
     protected final void fillSingleSourceFileWithSubtasksBlackBoxGradingConfigFormPartsFromConfig(SingleSourceFileWithSubtasksBlackBoxGradingConfigForm form, SingleSourceFileWithSubtasksBlackBoxGradingConfig config) {
         fillSingleSourceFileBlackBoxGradingConfigFormPartsFromConfig(form, config);
 

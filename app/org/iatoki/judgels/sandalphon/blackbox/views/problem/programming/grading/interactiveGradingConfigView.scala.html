@@ -1,6 +1,9 @@
-@(form: Form[org.iatoki.judgels.sandalphon.blackbox.forms.InteractiveGradingConfigForm], postUpdateGradingConfigCall: play.api.mvc.Call, testDataFiles: List[org.iatoki.judgels.FileInfo], helperFiles: List[org.iatoki.judgels.FileInfo])
-
 @import play.i18n.Messages
+@import play.api.mvc.Call
+@import org.iatoki.judgels.FileInfo
+@import org.iatoki.judgels.sandalphon.blackbox.forms.InteractiveGradingConfigForm
+
+@(interactiveGradingConfigForm: Form[InteractiveGradingConfigForm], postUpdateGradingConfigCall: Call, testDataFiles: List[FileInfo], helperFiles: List[FileInfo])
 
 @implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
 
@@ -182,13 +185,13 @@ $(document).ready(function() {
         return false;
     });
 
-    @for(i <- 0 until form.get.sampleTestCaseInputs.size) {
-        addNewSampleTestCase('@form.get.sampleTestCaseInputs.get(i)', '@form.get.sampleTestCaseOutputs.get(i)');
+    @for(i <- 0 until interactiveGradingConfigForm.get.sampleTestCaseInputs.size) {
+        addNewSampleTestCase('@interactiveGradingConfigForm.get.sampleTestCaseInputs.get(i)', '@interactiveGradingConfigForm.get.sampleTestCaseOutputs.get(i)');
     }
 
-    @for(i <- 0 until form.get.testCaseInputs.size) {
-        @for(j <- 0 until form.get.testCaseInputs.get(i).size) {
-            addNewTestCase('@form.get.testCaseInputs.get(i).get(j)', '@form.get.testCaseOutputs.get(i).get(j)');
+    @for(i <- 0 until interactiveGradingConfigForm.get.testCaseInputs.size) {
+        @for(j <- 0 until interactiveGradingConfigForm.get.testCaseInputs.get(i).size) {
+            addNewTestCase('@interactiveGradingConfigForm.get.testCaseInputs.get(i).get(j)', '@interactiveGradingConfigForm.get.testCaseOutputs.get(i).get(j)');
         }
     }
 });
@@ -199,13 +202,13 @@ $(document).ready(function() {
     @helper.CSRF.formField
 
 
-    @b3.inputWrapped("timeLimit", form("timeLimit"), '_label -> "Time Limit") { input =>
+    @b3.inputWrapped("timeLimit", interactiveGradingConfigForm("timeLimit"), '_label -> "Time Limit") { input =>
         <div class="input-group">
             @input
             <div class="input-group-addon">milliseconds</div>
         </div>
     }
-    @b3.inputWrapped("memoryLimit", form("memoryLimit"), '_label -> "Memory Limit") { input =>
+    @b3.inputWrapped("memoryLimit", interactiveGradingConfigForm("memoryLimit"), '_label -> "Memory Limit") { input =>
         <div class="input-group">
             @input
             <div class="input-group-addon">kilobytes</div>
@@ -322,9 +325,9 @@ $(document).ready(function() {
 
 
     @if(helperFiles.isEmpty) {
-        @b3.select(form("communicator"), Seq("none" -> "(None yet - please add communicator as a helper file)"), '_label -> "Communicator")
+        @b3.select(interactiveGradingConfigForm("communicator"), Seq("none" -> "(None yet - please add communicator as a helper file)"), '_label -> "Communicator")
     }else {
-        @b3.select(form("communicator"), helperFiles.map(f => f.getName -> f.getName).toSeq, '_label -> "Communicator")
+        @b3.select(interactiveGradingConfigForm("communicator"), helperFiles.map(f => f.getName -> f.getName).toSeq, '_label -> "Communicator")
     }
 
     @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }

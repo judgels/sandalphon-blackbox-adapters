@@ -1,8 +1,11 @@
-@(submission: org.iatoki.judgels.sandalphon.Submission, details: org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails, sourceFiles: Map[String, org.iatoki.judgels.gabriel.blackbox.SourceFile], authorName: String, problemAlias: String, problemName: String, gradingLanguageName: String, contestName: String)
-
 @import org.iatoki.judgels.play.JudgelsPlayUtils
+@import org.iatoki.judgels.sandalphon.ProgrammingSubmission
+@import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails
+@import org.iatoki.judgels.gabriel.blackbox.SourceFile
 
-<h3>Submission #@submission.getId</h3>
+@(programmingSubmission: ProgrammingSubmission, details: BlackBoxGradingResultDetails, sourceFiles: Map[String, SourceFile], authorName: String, problemAlias: String, problemName: String, gradingLanguageName: String, contestName: String)
+
+<h3>Submission #@programmingSubmission.getId</h3>
 
 <h4>General Info</h4>
 <div class="panel panel-default">
@@ -30,19 +33,19 @@
                     <td>Language</td><td>@gradingLanguageName</td>
                 </tr>
                 <tr>
-                    <td>Verdict</td><td>@submission.getLatestVerdict.getName</td>
+                    <td>Verdict</td><td>@programmingSubmission.getLatestVerdict.getName</td>
                 </tr>
                 <tr>
-                    <td>Score</td><td>@submission.getLatestScore</td>
+                    <td>Score</td><td>@programmingSubmission.getLatestScore</td>
                 </tr>
                 <tr>
-                    <td>Time</td><td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(submission.getTime.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(submission.getTime.getTime)</time></td>
+                    <td>Time</td><td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(programmingSubmission.getTime.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(programmingSubmission.getTime.getTime)</time></td>
                 </tr>
                 <tr>
-                    <td>JID</td><td>@submission.getJid</td>
+                    <td>JID</td><td>@programmingSubmission.getJid</td>
                 </tr>
                 <tr>
-                    <td>Grading JID</td><td>@submission.getLatestGradingJid</td>
+                    <td>Grading JID</td><td>@programmingSubmission.getLatestGradingJid</td>
                 </tr>
             </tbody>
         </table>

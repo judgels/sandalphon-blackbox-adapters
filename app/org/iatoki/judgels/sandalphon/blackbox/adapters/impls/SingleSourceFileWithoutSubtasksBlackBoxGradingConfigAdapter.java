@@ -11,6 +11,7 @@ import org.iatoki.judgels.sandalphon.blackbox.forms.SingleSourceFileWithoutSubta
 import java.util.List;
 
 public abstract class SingleSourceFileWithoutSubtasksBlackBoxGradingConfigAdapter extends SingleSourceFileBlackBoxGradingConfigAdapter {
+
     protected final void fillSingleSourceFileWithoutSubtasksBlackBoxGradingConfigFormPartsFromConfig(SingleSourceFileWithoutSubtasksBlackBoxGradingConfigForm form, SingleSourceFileWithoutSubtasksBlackBoxGradingConfig config) {
         fillSingleSourceFileBlackBoxGradingConfigFormPartsFromConfig(form, config);
     }
