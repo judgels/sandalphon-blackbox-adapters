@@ -9,7 +9,7 @@ import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.BatchWithSubtasksGradingConfig;
 import org.iatoki.judgels.sandalphon.adapters.ConfigurableWithTokilibFormat;
-import org.iatoki.judgels.sandalphon.adapters.impls.TokilibFile;
+import org.iatoki.judgels.sandalphon.adapters.TokilibFile;
 import org.iatoki.judgels.sandalphon.blackbox.forms.BatchWithSubtasksGradingConfigForm;
 import org.iatoki.judgels.sandalphon.blackbox.views.html.problem.programming.grading.batchWithSubtasksGradingConfigView;
 import play.api.mvc.Call;
@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public final class BatchWithSubtasksGradingConfigAdapter extends SingleSourceFileWithSubtasksBlackBoxGradingConfigAdapter implements ConfigurableWithTokilibFormat {
+public final class BatchWithSubtasksGradingEngineAdapter extends SingleSourceFileWithSubtasksBlackBoxGradingEngineAdapter implements ConfigurableWithTokilibFormat {
 
     @Override
     public Form<?> createFormFromConfig(GradingConfig config) {

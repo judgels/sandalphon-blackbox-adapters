@@ -3,21 +3,48 @@ package org.iatoki.judgels.sandalphon.blackbox.adapters.impls;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
+import org.iatoki.judgels.gabriel.GradingConfig;
+import org.iatoki.judgels.gabriel.SubmissionSource;
+import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig;
+import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.AbstractBlackBoxGradingConfig;
+import org.iatoki.judgels.sandalphon.ProgrammingSubmission;
 import org.iatoki.judgels.sandalphon.blackbox.forms.AbstractBlackBoxGradingConfigForm;
-import org.iatoki.judgels.sandalphon.adapters.GradingConfigAdapter;
+import org.iatoki.judgels.sandalphon.adapters.GradingEngineAdapter;
+import org.iatoki.judgels.sandalphon.blackbox.views.html.problem.programming.statement.blackBoxViewStatementView;
+import org.iatoki.judgels.sandalphon.blackbox.views.html.problem.programming.submission.blackBoxViewSubmissionView;
+import play.twirl.api.Html;
 
 import java.util.List;
 import java.util.Set;
 
-public abstract class AbstractBlackBoxGradingConfigAdapter implements GradingConfigAdapter {
+public abstract class AbstractBoxGradingEngineAdapter implements GradingEngineAdapter {
 
     @Override
     public Set<String> getSupportedGradingEngineNames() {
         String name = getClass().getSimpleName();
-        return ImmutableSet.of(name.substring(0, name.length() - "GradingConfigAdapter".length()));
+        return ImmutableSet.of(name.substring(0, name.length() - "GradingEngineAdapter".length()));
+    }
+
+    @Override
+    public Html renderViewStatement(String postSubmitUri, String name, String statement, GradingConfig config, String engine, Set<String> allowedGradingLanguageNames, String reasonNotAllowedToSubmit) {
+        BlackBoxGradingConfig blackBoxConfig = (BlackBoxGradingConfig) config;
+        return blackBoxViewStatementView.render(postSubmitUri, name, statement, blackBoxConfig, engine, allowedGradingLanguageNames, reasonNotAllowedToSubmit);
+    }
+
+    @Override
+    public Html renderViewSubmission(ProgrammingSubmission submission, SubmissionSource submissionSource, String authorName, String problemAlias, String problemName, String gradingLanguageName, String contestName) {
+        String errorMessage;
+        if (submission.getLatestVerdict().getCode().equals("!!!")) {
+            errorMessage = submission.getLatestDetails();
+        } else {
+            errorMessage = null;
+        }
+        BlackBoxGradingResultDetails details = new Gson().fromJson(submission.getLatestDetails(), BlackBoxGradingResultDetails.class);
+        return blackBoxViewSubmissionView.render(submission, errorMessage, details, submissionSource.getSubmissionFiles(), authorName, problemAlias, problemName, gradingLanguageName, contestName);
     }
 
     protected final void fillAbstractBlackBoxGradingFormPartsFromConfig(AbstractBlackBoxGradingConfigForm form, AbstractBlackBoxGradingConfig config) {

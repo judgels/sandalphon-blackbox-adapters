@@ -17,8 +17,7 @@ import play.twirl.api.Html;
 
 import java.util.List;
 
-public final class BatchGradingConfigAdapter extends SingleSourceFileWithoutSubtasksBlackBoxGradingConfigAdapter implements ConfigurableWithAutoPopulation {
-
+public final class BatchGradingEngineAdapter extends SingleSourceFileWithoutSubtasksBlackBoxGradingEngineAdapter implements ConfigurableWithAutoPopulation {
     @Override
     public Form<?> createFormFromConfig(GradingConfig config) {
         BatchGradingConfigForm form = new BatchGradingConfigForm();

@@ -5,8 +5,7 @@ import org.iatoki.judgels.sandalphon.blackbox.forms.SingleSourceFileBlackBoxGrad
 
 import java.util.List;
 
-public abstract class SingleSourceFileBlackBoxGradingConfigAdapter extends AbstractBlackBoxGradingConfigAdapter {
-
+public abstract class SingleSourceFileBlackBoxGradingEngineAdapter extends AbstractBoxGradingEngineAdapter {
     protected final void fillSingleSourceFileBlackBoxGradingConfigFormPartsFromConfig(SingleSourceFileBlackBoxGradingConfigForm form, SingleSourceFileBlackBoxGradingConfig config) {
         fillAbstractBlackBoxGradingFormPartsFromConfig(form, config);
     }

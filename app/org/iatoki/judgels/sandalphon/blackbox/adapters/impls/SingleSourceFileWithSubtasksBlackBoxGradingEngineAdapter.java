@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public abstract class SingleSourceFileWithSubtasksBlackBoxGradingConfigAdapter extends SingleSourceFileBlackBoxGradingConfigAdapter {
-
+public abstract class SingleSourceFileWithSubtasksBlackBoxGradingEngineAdapter extends SingleSourceFileBlackBoxGradingEngineAdapter {
     protected final void fillSingleSourceFileWithSubtasksBlackBoxGradingConfigFormPartsFromConfig(SingleSourceFileWithSubtasksBlackBoxGradingConfigForm form, SingleSourceFileWithSubtasksBlackBoxGradingConfig config) {
         fillSingleSourceFileBlackBoxGradingConfigFormPartsFromConfig(form, config);
 
