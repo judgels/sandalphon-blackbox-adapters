@@ -1,9 +1,9 @@
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 @import org.iatoki.judgels.sandalphon.ProgrammingSubmission
 @import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails
-@import org.iatoki.judgels.gabriel.blackbox.SourceFile
+@import org.iatoki.judgels.gabriel.SourceFile
 
-@(programmingSubmission: ProgrammingSubmission, details: BlackBoxGradingResultDetails, sourceFiles: Map[String, SourceFile], authorName: String, problemAlias: String, problemName: String, gradingLanguageName: String, contestName: String)
+@(programmingSubmission: ProgrammingSubmission, errorMessage: String, details: BlackBoxGradingResultDetails, sourceFiles: Map[String, SourceFile], authorName: String, problemAlias: String, problemName: String, gradingLanguageName: String, contestName: String)
 
 <h3>Submission #@programmingSubmission.getId</h3>
 
@@ -52,9 +52,9 @@
     </div>
 </div>
 
-@if(details != null && details.getErrorMessage != null) {
+@if(errorMessage != null) {
     <h4>Error Message</h4>
-    <pre>@details.getErrorMessage</pre>
+    <pre>@errorMessage</pre>
 }
 
 @if(details != null && details.getSubtaskResults.size >= 1 && details.getSubtaskResults.get(0).getId != -1) {
