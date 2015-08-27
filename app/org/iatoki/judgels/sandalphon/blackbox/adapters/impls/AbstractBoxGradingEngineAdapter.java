@@ -11,6 +11,7 @@ import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.AbstractBlackBoxGradingConfig;
+import org.iatoki.judgels.sandalphon.ProblemStatement;
 import org.iatoki.judgels.sandalphon.ProgrammingSubmission;
 import org.iatoki.judgels.sandalphon.blackbox.forms.AbstractBlackBoxGradingConfigForm;
 import org.iatoki.judgels.sandalphon.adapters.GradingEngineAdapter;
@@ -30,9 +31,9 @@ public abstract class AbstractBoxGradingEngineAdapter implements GradingEngineAd
     }
 
     @Override
-    public Html renderViewStatement(String postSubmitUri, String name, String statement, GradingConfig config, String engine, Set<String> allowedGradingLanguageNames, String reasonNotAllowedToSubmit) {
+    public Html renderViewStatement(String postSubmitUri, ProblemStatement statement, GradingConfig config, String engine, Set<String> allowedGradingLanguageNames, String reasonNotAllowedToSubmit) {
         BlackBoxGradingConfig blackBoxConfig = (BlackBoxGradingConfig) config;
-        return blackBoxViewStatementView.render(postSubmitUri, name, statement, blackBoxConfig, engine, allowedGradingLanguageNames, reasonNotAllowedToSubmit);
+        return blackBoxViewStatementView.render(postSubmitUri, statement, blackBoxConfig, engine, allowedGradingLanguageNames, reasonNotAllowedToSubmit);
     }
 
     @Override

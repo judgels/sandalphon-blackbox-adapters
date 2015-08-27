@@ -2,8 +2,9 @@
 @import com.google.common.base.Joiner
 @import org.iatoki.judgels.gabriel.GradingLanguageRegistry
 @import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig
+@import org.iatoki.judgels.sandalphon.ProblemStatement
 
-@(postSubmitUri: String, name: String, statement: String, blackBoxGradingConfig: BlackBoxGradingConfig, engine: String, allowedGradingLanguageNames: Set[String], reasonNotAllowedToSubmit: String)
+@(postSubmitUri: String, statement: ProblemStatement, blackBoxGradingConfig: BlackBoxGradingConfig, engine: String, allowedGradingLanguageNames: Set[String], reasonNotAllowedToSubmit: String)
 
 @if(play.mvc.Controller.flash("submissionError") != null) {
     <div class="alert alert-danger" role="alert">@{play.mvc.Controller.flash("submissionError")}</div>
@@ -13,7 +14,7 @@
     <div class="alert alert-danger" role="alert">@{reasonNotAllowedToSubmit}</div>
 }
 
-<h2 class="text-center">@name</h2>
+<h2 class="text-center">@statement.getTitle</h2>
 
 <p class="text-center">Time limit: @blackBoxGradingConfig.getTimeLimitInMilliseconds ms</p>
 <p class="text-center">Memory limit: @blackBoxGradingConfig.getMemoryLimitInKilobytes KB</p>
@@ -21,7 +22,7 @@
 <p>&nbsp;</p>
 
 <div class="content-text">
-    @Html(statement)
+    @Html(statement.getText)
 </div>
 
 <hr />
