@@ -16,8 +16,22 @@
 
 <h2 class="text-center">@statement.getTitle</h2>
 
-<p class="text-center">Time limit: @blackBoxGradingConfig.getTimeLimitInMilliseconds ms</p>
-<p class="text-center">Memory limit: @blackBoxGradingConfig.getMemoryLimitInKilobytes KB</p>
+<p class="text-center">
+    Time limit:
+    @if(blackBoxGradingConfig.getTimeLimitInMilliseconds % 1000 == 0) {
+        @{blackBoxGradingConfig.getTimeLimitInMilliseconds / 1000} s
+    }else {
+        @blackBoxGradingConfig.getTimeLimitInMilliseconds ms
+    }
+</p>
+<p class="text-center">
+    Memory limit:
+    @if(blackBoxGradingConfig.getMemoryLimitInKilobytes % 1024 == 0) {
+        @{blackBoxGradingConfig.getMemoryLimitInKilobytes / 1024} MB
+    }else {
+        @blackBoxGradingConfig.getMemoryLimitInKilobytes KB
+    }
+</p>
 
 <p>&nbsp;</p>
 
