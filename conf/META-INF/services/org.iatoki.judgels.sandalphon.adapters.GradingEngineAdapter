@@ -1,4 +1,0 @@
-org.iatoki.judgels.sandalphon.blackbox.adapters.impls.BatchGradingEngineAdapter
-org.iatoki.judgels.sandalphon.blackbox.adapters.impls.BatchWithSubtasksGradingEngineAdapter
-org.iatoki.judgels.sandalphon.blackbox.adapters.impls.InteractiveGradingEngineAdapter
-org.iatoki.judgels.sandalphon.blackbox.adapters.impls.InteractiveWithSubtasksGradingEngineAdapter
