@@ -1,7 +1,9 @@
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 @import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmission
 @import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails
+@import org.iatoki.judgels.gabriel.OutputOnlyMagic
 @import org.iatoki.judgels.gabriel.SourceFile
+@import org.apache.commons.io.IOUtils
 
 @(programmingSubmission: ProgrammingSubmission, errorMessage: String, details: BlackBoxGradingResultDetails, sourceFiles: Map[String, SourceFile], authorName: String, problemAlias: String, problemName: String, gradingLanguageName: String, contestName: String)
 
@@ -217,18 +219,20 @@
     <p>(No info)</p>
 }}
 
-<h4>Source Files</h4>
-@for((key, sourceFile) <- sourceFiles) {
-    <div class="panel panel-default">
-        <div class="panel-heading">@key - @sourceFile.getName</div>
-        <div class="panel-body">
-            <pre>@sourceFile.getContent</pre>
-            <p>Compilation Output:</p>
-            @if(details != null) {
-                <pre>@details.getCompilationOutputs.get(key)</pre>
-            }else{
-                <p>(No info)</p>
-            }
+@if(gradingLanguageName != OutputOnlyMagic.DISPLAY_NAME) {
+    <h4>Source Files</h4>
+    @for((key, sourceFile) <- sourceFiles) {
+        <div class="panel panel-default">
+            <div class="panel-heading">@key - @sourceFile.getName</div>
+            <div class="panel-body">
+                <pre>@IOUtils.toString(sourceFile.getContent)</pre>
+                <p>Compilation Output:</p>
+                @if(details != null) {
+                    <pre>@details.getCompilationOutputs.get(key)</pre>
+                } else {
+                    <p>(No info)</p>
+                }
+            </div>
         </div>
-    </div>
+    }
 }
