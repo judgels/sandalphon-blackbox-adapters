@@ -24,6 +24,12 @@ public final class OutputOnlyGradingEngineAdapter extends SingleSourceFileWithou
         OutputOnlyGradingConfig castConfig = (OutputOnlyGradingConfig) config;
         fillSingleSourceFileWithoutSubtasksBlackBoxGradingConfigFormPartsFromConfig(form, castConfig);
 
+        if (castConfig.getCustomScorer() == null) {
+            form.customScorer = "(none)";
+        } else {
+            form.customScorer = castConfig.getCustomScorer();
+        }
+
         return Form.form(OutputOnlyGradingConfigForm.class).fill(form);
     }
 
@@ -43,7 +49,14 @@ public final class OutputOnlyGradingEngineAdapter extends SingleSourceFileWithou
         @SuppressWarnings("unchecked")
         List<TestGroup> testData = (List<TestGroup>) parts.get(2);
 
-        return new OutputOnlyGradingConfig(testData);
+        String customScorer;
+        if (formData.customScorer.equals("(none)")) {
+            customScorer = null;
+        } else {
+            customScorer = formData.customScorer;
+        }
+
+        return new OutputOnlyGradingConfig(testData, customScorer);
     }
 
     @Override
@@ -61,7 +74,8 @@ public final class OutputOnlyGradingEngineAdapter extends SingleSourceFileWithou
 
         List<TestGroup> testData = ImmutableList.of(new TestGroup(0, ImmutableList.of()), new TestGroup(-1, testCases.build()));
 
-        return new OutputOnlyGradingConfig(testData);
+        OutputOnlyGradingConfig castConfig = (OutputOnlyGradingConfig) config;
+        return new OutputOnlyGradingConfig(testData, castConfig.getCustomScorer());
     }
 
     @Override

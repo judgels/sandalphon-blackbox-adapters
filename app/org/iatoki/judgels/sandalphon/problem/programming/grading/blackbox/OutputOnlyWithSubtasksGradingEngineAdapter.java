@@ -27,6 +27,12 @@ public final class OutputOnlyWithSubtasksGradingEngineAdapter extends SingleSour
         OutputOnlyWithSubtasksGradingConfig castConfig = (OutputOnlyWithSubtasksGradingConfig) config;
         fillSingleSourceFileWithSubtasksBlackBoxGradingConfigFormPartsFromConfig(form, castConfig);
 
+        if (castConfig.getCustomScorer() == null) {
+            form.customScorer = "(none)";
+        } else {
+            form.customScorer = castConfig.getCustomScorer();
+        }
+
         return Form.form(OutputOnlyWithSubtasksGradingConfigForm.class).fill(form);
     }
 
@@ -44,7 +50,14 @@ public final class OutputOnlyWithSubtasksGradingEngineAdapter extends SingleSour
         @SuppressWarnings("unchecked")
         List<Integer> subtaskPoints = (List<Integer>) parts.get(3);
 
-        return new OutputOnlyWithSubtasksGradingConfig(testData, subtaskPoints);
+        String customScorer;
+        if (formData.customScorer.equals("(none)")) {
+            customScorer = null;
+        } else {
+            customScorer = formData.customScorer;
+        }
+
+        return new OutputOnlyWithSubtasksGradingConfig(testData, subtaskPoints, customScorer);
     }
 
     @Override
@@ -128,7 +141,7 @@ public final class OutputOnlyWithSubtasksGradingEngineAdapter extends SingleSour
             }
         }
 
-        return new OutputOnlyWithSubtasksGradingConfig(testData, subtaskPoints);
+        return new OutputOnlyWithSubtasksGradingConfig(testData, subtaskPoints, castConfig.getCustomScorer());
     }
 
     @Override
