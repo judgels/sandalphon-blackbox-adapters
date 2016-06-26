@@ -61,6 +61,12 @@ public class FunctionalWithSubtasksGradingEngineAdapter extends MultipleSourceFi
 
         form.subtaskPoints = subtaskPoints;
 
+        if (castConfig.getCustomScorer() == null) {
+            form.customScorer = "(none)";
+        } else {
+            form.customScorer = castConfig.getCustomScorer();
+        }
+
         return Form.form(FunctionalWithSubtasksGradingConfigForm.class).fill(form);
     }
 
@@ -159,7 +165,14 @@ public class FunctionalWithSubtasksGradingEngineAdapter extends MultipleSourceFi
             }
         }
 
-        return new FunctionalWithSubtasksGradingConfig(timeLimit, memoryLimit, filledTestData.build(), sourceFileFieldKeys, subtaskPoints.build());
+        String customScorer;
+        if (formData.customScorer.equals("(none)")) {
+            customScorer = null;
+        } else {
+            customScorer = formData.customScorer;
+        }
+
+        return new FunctionalWithSubtasksGradingConfig(timeLimit, memoryLimit, filledTestData.build(), sourceFileFieldKeys, subtaskPoints.build(), customScorer);
     }
 
     @Override
@@ -253,7 +266,7 @@ public class FunctionalWithSubtasksGradingEngineAdapter extends MultipleSourceFi
             }
         }
 
-        return new FunctionalWithSubtasksGradingConfig(castConfig.getTimeLimitInMilliseconds(), castConfig.getMemoryLimitInKilobytes(), testData, sourceFileFieldKeys, subtaskPoints);
+        return new FunctionalWithSubtasksGradingConfig(castConfig.getTimeLimitInMilliseconds(), castConfig.getMemoryLimitInKilobytes(), testData, sourceFileFieldKeys, subtaskPoints, castConfig.getCustomScorer());
     }
 
     private List<Integer> getSubtaskIds(TestCase testCase, int subtasksCount) {

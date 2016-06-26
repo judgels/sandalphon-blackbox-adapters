@@ -23,6 +23,12 @@ public class FunctionalGradingEngineAdapter extends MultipleSourceFilesBlackBoxG
         FunctionalGradingConfig castConfig = (FunctionalGradingConfig) config;
         fillMultipleSourceFileBlackBoxGradingConfigFormPartsFromConfig(form, castConfig);
 
+        if (castConfig.getCustomScorer() == null) {
+            form.customScorer = "(none)";
+        } else {
+            form.customScorer = castConfig.getCustomScorer();
+        }
+
         return Form.form(FunctionalGradingConfigForm.class).fill(form);
     }
 
@@ -48,7 +54,14 @@ public class FunctionalGradingEngineAdapter extends MultipleSourceFilesBlackBoxG
         @SuppressWarnings("unchecked")
         List<String> sourceFileFieldKeys = (List<String>) parts.get(3);
 
-        return new FunctionalGradingConfig(timeLimit, memoryLimit, testData, sourceFileFieldKeys);
+        String customScorer;
+        if (formData.customScorer.equals("(none)")) {
+            customScorer = null;
+        } else {
+            customScorer = formData.customScorer;
+        }
+
+        return new FunctionalGradingConfig(timeLimit, memoryLimit, testData, sourceFileFieldKeys, customScorer);
     }
 
     @Override
@@ -67,7 +80,7 @@ public class FunctionalGradingEngineAdapter extends MultipleSourceFilesBlackBoxG
         List<TestGroup> testData = ImmutableList.of(new TestGroup(0, ImmutableList.of()), new TestGroup(-1, testCases.build()));
 
         FunctionalGradingConfig castConfig = (FunctionalGradingConfig) config;
-        return new FunctionalGradingConfig(castConfig.getTimeLimitInMilliseconds(), castConfig.getMemoryLimitInKilobytes(), testData, castConfig.getSourceFileFieldKeys());
+        return new FunctionalGradingConfig(castConfig.getTimeLimitInMilliseconds(), castConfig.getMemoryLimitInKilobytes(), testData, castConfig.getSourceFileFieldKeys(), castConfig.getCustomScorer());
     }
 
     @Override

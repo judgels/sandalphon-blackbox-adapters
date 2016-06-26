@@ -335,6 +335,7 @@ $(document).ready(function() {
         </div>
     </div>
 
+    @b3.select(functionalGradingConfigForm("customScorer"), helperFiles.map(f => f.getName -> f.getName).toSeq ++ Seq("(none)" -> "(None)"), '_label -> "Custom Scorer")
 
     @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }
 }

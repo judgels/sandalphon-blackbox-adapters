@@ -9,4 +9,6 @@ public class FunctionalWithSubtasksGradingConfigForm extends MultipleSourceFiles
     public List<List<Integer>> testGroupSubtaskIds;
 
     public List<Integer> subtaskPoints;
+
+    public String customScorer;
 }
