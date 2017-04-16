@@ -64,15 +64,20 @@ public final class InteractiveGradingEngineAdapter extends SingleSourceFileWitho
     @Override
     public GradingConfig updateConfigWithAutoPopulation(GradingConfig config, List<FileInfo> testDataFiles) {
         ImmutableList.Builder<TestCase> testCases = ImmutableList.builder();
+        ImmutableList.Builder<TestCase> sampleTestCases = ImmutableList.builder();
 
-        for (int i = 0; i + 1 < testDataFiles.size(); i++) {
+        for (int i = 0; i < testDataFiles.size(); i++) {
             String in = testDataFiles.get(i).getName();
             if (isTestCase(in)) {
-                testCases.add(new TestCase(in, null, ImmutableSet.of(-1)));
+                if (in.contains("sample")) {
+                    sampleTestCases.add(new TestCase(in, null, ImmutableSet.of(0)));
+                } else {
+                    testCases.add(new TestCase(in, null, ImmutableSet.of(-1)));
+                }
             }
         }
 
-        List<TestGroup> testData = ImmutableList.of(new TestGroup(0, ImmutableList.of()), new TestGroup(-1, testCases.build()));
+        List<TestGroup> testData = ImmutableList.of(new TestGroup(0, sampleTestCases.build()), new TestGroup(-1, testCases.build()));
 
         InteractiveGradingConfig castConfig = (InteractiveGradingConfig) config;
         return new InteractiveGradingConfig(castConfig.getTimeLimitInMilliseconds(), castConfig.getMemoryLimitInKilobytes(), testData, castConfig.getCommunicator());

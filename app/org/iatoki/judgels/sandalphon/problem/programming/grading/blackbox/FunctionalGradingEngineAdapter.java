@@ -67,17 +67,22 @@ public class FunctionalGradingEngineAdapter extends MultipleSourceFilesBlackBoxG
     @Override
     public GradingConfig updateConfigWithAutoPopulation(GradingConfig config, List<FileInfo> testDataFiles) {
         ImmutableList.Builder<TestCase> testCases = ImmutableList.builder();
+        ImmutableList.Builder<TestCase> sampleTestCases = ImmutableList.builder();
 
         for (int i = 0; i + 1 < testDataFiles.size(); i++) {
             String in = testDataFiles.get(i).getName();
             String out = testDataFiles.get(i + 1).getName();
             if (isTestCasePair(in, out)) {
-                testCases.add(new TestCase(in, out, ImmutableSet.of(-1)));
+                if (in.contains("sample")) {
+                    sampleTestCases.add(new TestCase(in, out, ImmutableSet.of(0)));
+                } else {
+                    testCases.add(new TestCase(in, out, ImmutableSet.of(-1)));
+                }
                 i++;
             }
         }
 
-        List<TestGroup> testData = ImmutableList.of(new TestGroup(0, ImmutableList.of()), new TestGroup(-1, testCases.build()));
+        List<TestGroup> testData = ImmutableList.of(new TestGroup(0, sampleTestCases.build()), new TestGroup(-1, testCases.build()));
 
         FunctionalGradingConfig castConfig = (FunctionalGradingConfig) config;
         return new FunctionalGradingConfig(castConfig.getTimeLimitInMilliseconds(), castConfig.getMemoryLimitInKilobytes(), testData, castConfig.getSourceFileFieldKeys(), castConfig.getCustomScorer());
