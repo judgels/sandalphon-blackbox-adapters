@@ -69,7 +69,7 @@
                 <div class="col-sm-9">
                     <select name="language">
                     @for((k, v) <- GradingLanguageRegistry.getInstance().getGradingLanguages) {
-                        @if(allowedGradingLanguageNames.contains(k)) {
+                        @if(k != OutputOnlyMagic.KEY && allowedGradingLanguageNames.contains(k)) {
                             <option value="@k">@v</option>
                         }
                     }
