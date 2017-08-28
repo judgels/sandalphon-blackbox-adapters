@@ -212,7 +212,12 @@ public class FunctionalWithSubtasksGradingEngineAdapter extends MultipleSourceFi
 
             try {
                 String name = parts[0];
-                int batchNo = Integer.parseInt(parts[1]);
+                int batchNo;
+                if (parts[1].equals("sample")) {
+                    batchNo = 0;
+                } else {
+                    batchNo = Integer.parseInt(parts[1]);
+                }
                 int tcNo = Integer.parseInt(parts[2]);
 
                 tokilibFiles.add(new TokilibFile(name, batchNo, tcNo));
